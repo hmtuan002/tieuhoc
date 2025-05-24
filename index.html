@@ -19,7 +19,6 @@
             overflow: hidden;
         }
 
-
         #home-menu {
             display: flex;
             flex-direction: column;
@@ -75,7 +74,6 @@
             transform: translateY(-3px);
         }
 
-
         #chatbot-container {
             display: none;
             flex-grow: 1;
@@ -86,7 +84,6 @@
             border-radius: 10px;
             margin: 20px;
         }
-
 
         #sidebar {
             width: 200px;
@@ -130,7 +127,6 @@
             color: white;
             transform: translateX(3px);
         }
-
 
         .chat-area {
             flex-grow: 1;
@@ -226,7 +222,6 @@
             transform: translateY(1px);
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
-
 
         @media (max-width: 768px) {
             #home-menu {
@@ -413,8 +408,7 @@
     <script type="module">
         import { GoogleGenerativeAI } from "@google/generative-ai";
 
-
-        const KHOA_API = "AIzaSyAn9dMMM5u8dEGpI8mEzQvdMSuI8KFH8jM"; 
+        const KHOA_API = "AIzaSyAn9dMMM5u8dEGpI8mEzQvdMSuI8KFH8jM";
         const moHinhAI = new GoogleGenerativeAI(KHOA_API);
         const moHinh = moHinhAI.getGenerativeModel({ model: "gemini-2.0-flash-thinking-exp-01-21" });
 
@@ -427,43 +421,43 @@
         const sidebarButtons = document.querySelectorAll('.sidebar-button');
 
         let currentSubject = '';
-        let homeworkData = {}; 
+        let homeworkData = {}; // To store fetched homework problems
 
         const subjectFilters = {
             "toan": {
                 name: "Toán",
                 excludeKeywords: ["đại số tuyến tính", "giải tích", "lượng tử", "phân tích chuyên sâu"],
-                homeworkRequestPhrases: /(cho tôi bài tập toán|bài tập toán|có bài tập toán không|bài tập về toán)/i
+                homeworkExamples: [] // Will be populated from baitap.txt
             },
             "tieng-viet": {
                 name: "Tiếng Việt",
                 excludeKeywords: ["nghiên cứu văn học", "phân tích chuyên sâu", "triết học", "ngữ pháp nâng cao", "phản biện văn học"],
-                homeworkRequestPhrases: /(cho tôi bài tập tiếng việt|bài tập tiếng việt|có bài tập tiếng việt không|bài tập về tiếng việt)/i
+                homeworkExamples: []
             },
             "tieng-anh": {
                 name: "Tiếng Anh",
                 excludeKeywords: ["advanced grammar", "literary analysis", "linguistics", "academic writing", "syntax"],
-                homeworkRequestPhrases: /(cho tôi bài tập tiếng anh|bài tập tiếng anh|có bài tập tiếng anh không|bài tập về tiếng anh)/i
+                homeworkExamples: []
             },
             "tin-hoc": {
                 name: "Tin Học",
                 excludeKeywords: ["lập trình", "trí tuệ nhân tạo", "máy học", "công nghệ thông tin chuyên sâu", "thuật toán phức tạp", "mạng máy tính"],
-                homeworkRequestPhrases: /(cho tôi bài tập tin học|bài tập tin học|có bài tập tin học không|bài tập về tin học)/i
+                homeworkExamples: []
             },
             "cong-nghe": {
                 name: "Công Nghệ",
                 excludeKeywords: ["kỹ thuật", "công nghệ cao", "tự động hóa", "robotics", "thiết kế mạch", "vật liệu mới"],
-                homeworkRequestPhrases: /(cho tôi bài tập công nghệ|bài tập công nghệ|có bài tập công nghệ không|bài tập về công nghệ)/i
+                homeworkExamples: []
             },
             "lich-su-dia-ly": {
                 name: "Lịch Sử & Địa Lý",
                 excludeKeywords: ["nghiên cứu sử học", "phân tích địa chính trị", "kinh tế học", "xã hội học", "diễn biến phức tạp", "lý thuyết địa lý"],
-                homeworkRequestPhrases: /(cho tôi bài tập lịch sử địa lý|bài tập lịch sử địa lý|có bài tập lịch sử địa lý không|bài tập về lịch sử địa lý)/i
+                homeworkExamples: []
             },
             "khoa-hoc": {
                 name: "Khoa Học",
                 excludeKeywords: ["vật lý lượng tử", "hóa học hữu cơ", "sinh học phân tử", "thiên văn học", "di truyền học", "nghiên cứu khoa học chuyên sâu"],
-                homeworkRequestPhrases: /(cho tôi bài tập khoa học|bài tập khoa học|có bài tập khoa học không|bài tập về khoa học)/i
+                homeworkExamples: []
             }
         };
 
@@ -471,32 +465,46 @@
             "đại học", "cao học", "nghiên cứu", "phân tích chuyên sâu", "vật lý hạt nhân", "triết học",
             "kinh tế vĩ mô", "chính trị quốc tế", "chứng minh", "phản biện", "tôn giáo", "đức tin"
         ];
-        const homeworkSolvingRequestPhrases = /(giải (hộ|giúp|cho tôi|chi tiết))/;
+        const homeworkRequestPhrases = /(giải (hộ|giúp|cho tôi|chi tiết)|cho bài tập|xin bài tập|gợi ý bài tập)/;
 
 
-
+        // Function to fetch and parse baitap.txt
         async function loadHomeworkData() {
             try {
                 const response = await fetch('baitap.txt');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 const text = await response.text();
-                const sections = text.split('###').filter(section => section.trim() !== '');
+                const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
 
-                sections.forEach(section => {
-                    const lines = section.trim().split('\n');
-                    const subjectTag = lines[0].toLowerCase().replace(/[^a-z-]/g, '');
-                    const exercises = lines.slice(1).filter(line => line.trim() !== '');
-                    if (subjectTag && exercises.length > 0) {
-                        homeworkData[subjectTag] = exercises;
+                let currentSection = '';
+                for (const line of lines) {
+                    if (line.startsWith('#')) {
+                        currentSection = line.substring(1); // Get subject key
+                        homeworkData[currentSection] = [];
+                    } else if (currentSection) {
+                        homeworkData[currentSection].push(line);
                     }
-                });
+                }
+                // Populate homeworkExamples in subjectFilters after loading
+                for (const subjectKey in homeworkData) {
+                    if (subjectFilters[subjectKey]) {
+                        subjectFilters[subjectKey].homeworkExamples = homeworkData[subjectKey];
+                    }
+                }
                 console.log("Homework data loaded:", homeworkData);
             } catch (error) {
-                console.error("Error loading homework data:", error);
+                console.error("Could not load homework data:", error);
+                // Fallback to empty arrays if loading fails
+                for (const key in subjectFilters) {
+                    subjectFilters[key].homeworkExamples = [];
+                }
             }
         }
 
-
-        document.addEventListener('DOMContentLoaded', loadHomeworkData);
+        // Load homework data when the script starts
+        loadHomeworkData();
 
 
         subjectButtons.forEach(button => {
@@ -537,9 +545,7 @@
             const divTinNhan = document.createElement('div');
             divTinNhan.classList.add('tin-nhan', `tin-nhan-${nguoiGui}`);
 
-
             let formattedText = vanBan.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
             formattedText = formattedText.replace(/\n/g, '<br>');
 
             divTinNhan.innerHTML = formattedText;
@@ -560,19 +566,15 @@
                 return;
             }
 
+            // Check if the user is asking for homework problems specifically
+            const isAskingForHomework = homeworkRequestPhrases.test(tinNhanNguoiDung.toLowerCase());
 
-            if (laYeuCauGiaiBaiTapCuThe(tinNhanNguoiDung)) {
-                themTinNhanVaoGiaoDien("bot", "Chào bạn! Tôi không thể giải bài tập cụ thể cho bạn. Thay vào đó, bạn có thể hỏi tôi về cách làm một dạng bài tập nào đó, tôi sẽ hướng dẫn bạn nhé!");
-                return;
-            }
-
-
-            if (laYeuCauCungCapBaiTap(tinNhanNguoiDung)) {
-                if (currentSubject && homeworkData[currentSubject] && homeworkData[currentSubject].length > 0) {
-                    let exercises = homeworkData[currentSubject].map(e => `- ${e}`).join('\n');
-                    themTinNhanVaoGiaoDien("bot", `Dưới đây là một số bài tập **${subjectFilters[currentSubject].name}** mà bạn có thể tham khảo:\n${exercises}\n\nBạn hãy thử giải các bài tập này và hỏi tôi nếu có bất kỳ câu hỏi nào về cách làm nhé!`);
+            if (isAskingForHomework) {
+                if (subjectFilters[currentSubject] && subjectFilters[currentSubject].homeworkExamples.length > 0) {
+                    let examples = subjectFilters[currentSubject].homeworkExamples.map(e => `- ${e}`).join('\n');
+                    themTinNhanVaoGiaoDien("bot", `Chào bạn! Thầy có một vài dạng bài tập cơ bản mà em có thể tham khảo trong môn **${subjectFilters[currentSubject].name}** đây:\n${examples}\n\nEm hãy thử giải các bài tập này và hỏi thầy nếu có bất kỳ câu hỏi nào về cách làm nhé!`);
                 } else {
-                    themTinNhanVaoGiaoDien("bot", `Rất tiếc, tôi chưa có bài tập cho môn ${subjectFilters[currentSubject].name} trong dữ liệu của mình.`);
+                    themTinNhanVaoGiaoDien("bot", "Chào bạn! Hiện tại thầy chưa có sẵn bài tập cho môn này. Thay vào đó, em có thể hỏi thầy về cách làm một dạng bài tập nào đó, thầy sẽ hướng dẫn em nhé!");
                 }
                 return;
             }
@@ -601,10 +603,8 @@
         function laCauHoiTieuHoc(cauHoi) {
             const cauHoiThuong = cauHoi.toLowerCase();
 
-
             const laKhongTieuHocChung = generalExcludeKeywords.some(tuKhoa => cauHoiThuong.includes(tuKhoa));
             if (laKhongTieuHocChung) return false;
-
 
             if (currentSubject && subjectFilters[currentSubject]) {
                 const subjectSpecificKeywords = subjectFilters[currentSubject].excludeKeywords;
@@ -615,17 +615,9 @@
             return true;
         }
 
-        function laYeuCauGiaiBaiTapCuThe(cauHoi) {
+        function laYeuCauGiaiBaiTap(cauHoi) {
             const cauHoiThuong = cauHoi.toLowerCase();
-            return homeworkSolvingRequestPhrases.test(cauHoiThuong);
-        }
-
-        function laYeuCauCungCapBaiTap(cauHoi) {
-            if (currentSubject && subjectFilters[currentSubject] && subjectFilters[currentSubject].homeworkRequestPhrases) {
-                const cauHoiThuong = cauHoi.toLowerCase();
-                return subjectFilters[currentSubject].homeworkRequestPhrases.test(cauHoiThuong);
-            }
-            return false;
+            return homeworkRequestPhrases.test(cauHoiThuong);
         }
     </script>
 </body>
