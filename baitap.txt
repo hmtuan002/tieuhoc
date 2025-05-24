@@ -1,48 +1,6 @@
 ###TOAN###
 Bài 1: Một đàn gà có 15 con, mẹ mua thêm 5 con nữa. Hỏi đàn gà có tất cả bao nhiêu con?
 Bài 2: An có 10 quả táo, An ăn hết 3 quả. Hỏi An còn lại bao nhiêu quả táo?
-Bài 3: Tính: 5 + 7 =
-Bài 4: Tính: 12 - 4 =
-Bài 5: Điền số thích hợp vào chỗ chấm: 2, 4, 6, __, 10.
 
 ###TIENG-VIET###
 Bài 1: Gạch chân các danh từ trong câu sau: 'Mẹ em là giáo viên.'
-Bài 2: Đặt câu với từ 'xinh đẹp'.
-Bài 3: Tìm các từ đồng nghĩa với 'vui vẻ'.
-Bài 4: Kể về một người bạn thân của em (3-5 câu).
-Bài 5: Viết 2 câu tả con mèo nhà em.
-
-###TIENG-ANH###
-Bài 1: Fill in the blank: 'I __ a student.' (am/is/are)
-Bài 2: Translate to English: 'Chào buổi sáng.'
-Bài 3: Name 3 animals.
-Bài 4: Write your name and age in English.
-Bài 5: What is your favorite color?
-
-###TIN-HOC###
-Bài 1: Kể tên 3 bộ phận chính của máy tính.
-Bài 2: Biểu tượng nào dùng để mở trình duyệt web?
-Bài 3: Nút nào trên bàn phím dùng để xóa chữ?
-Bài 4: Làm thế nào để lưu một bức tranh bạn vẽ trên máy tính?
-Bài 5: Kể tên một số phần mềm học tập mà em biết.
-
-###CONG-NGHE###
-Bài 1: Kể tên một đồ dùng trong nhà sử dụng điện.
-Bài 2: Làm thế nào để tiết kiệm điện trong gia đình?
-Bài 3: Kể tên các loại vật liệu dùng để làm bàn học.
-Bài 4: Tại sao cần phải rửa tay trước khi ăn?
-Bài 5: Nêu công dụng của chiếc kéo.
-
-###LICH-SU-DIA-LY###
-Bài 1: Kể tên một vị anh hùng dân tộc của Việt Nam.
-Bài 2: Việt Nam có bao nhiêu tỉnh thành?
-Bài 3: Sông Hồng chảy qua những tỉnh nào?
-Bài 4: Ngày giải phóng miền Nam là ngày nào?
-Bài 5: Thủ đô của Việt Nam là gì?
-
-###KHOA-HOC###
-Bài 1: Nêu tên ba màu cơ bản.
-Bài 2: Kể tên ba loại động vật sống dưới nước.
-Bài 3: Tại sao cây cần ánh sáng mặt trời?
-Bài 4: Nêu hai cách để bảo vệ môi trường.
-Bài 5: Hiện tượng mưa được hình thành như thế nào?
