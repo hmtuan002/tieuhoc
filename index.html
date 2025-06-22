@@ -618,18 +618,30 @@ loadMultipleChoiceData();
             khungTroChuyen.scrollTop = khungTroChuyen.scrollHeight;
         }
 
-        /**
-         * Xử lý gửi tin nhắn của người dùng và nhận phản hồi từ bot.
-         */
-         function startMultipleChoiceQuiz(subject) {
+      // Hàm bổ sung: Chọn ngẫu nhiên 10 câu từ danh sách
+function getRandomQuestions(questions, count) {
+    const shuffled = [...questions].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+}
+
+// Sửa hàm startMultipleChoiceQuiz
+function startMultipleChoiceQuiz(subject) {
     if (!multipleChoiceData[subject] || multipleChoiceData[subject].length === 0) {
         themTinNhanVaoGiaoDien("bot", `Hiện không có bài tập trắc nghiệm nào cho môn ${subjectFilters[subject].name}.`);
         return;
     }
+
+    // Lấy tất cả câu hỏi của môn học
+    const allQuestions = multipleChoiceData[subject];
     
+    // Nếu môn Toán có >10 câu → chọn ngẫu nhiên 10 câu
+    const selectedQuestions = (subject === 'toan' && allQuestions.length > 10) 
+        ? getRandomQuestions(allQuestions, 10) 
+        : allQuestions;
+
     quizSubject = subject;
     currentQuiz = {
-        questions: [...multipleChoiceData[subject]], // Sao chép mảng câu hỏi
+        questions: selectedQuestions,
         currentQuestionIndex: 0,
         userAnswers: [],
         score: 0
