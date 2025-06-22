@@ -472,7 +472,10 @@ let quizSubject = ''; // Môn học của bài trắc nghiệm hiện tại
         ];
         // Các cụm từ người dùng có thể dùng để yêu cầu bài tập
         const homeworkRequestPhrases = /(cho (tôi|em) bài tập|xin bài tập|gợi ý bài tập|bài tập về)/;
-
+function getRandomItems(array, count) {
+    const shuffled = [...array].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, Math.min(count, array.length));
+}
 async function loadMultipleChoiceData() {
     try {
         const response = await fetch('tracnghiem.txt');
@@ -744,17 +747,21 @@ function handleQuizAnswer(answer) {
             // --- LOGIC XỬ LÝ YÊU CẦU BÀI TẬP TỪ baitap.txt ---
             const isAskingForHomework = homeworkRequestPhrases.test(tinNhanNguoiDung.toLowerCase());
 
-            if (isAskingForHomework) {
-                if (currentSubject && subjectFilters[currentSubject] && subjectFilters[currentSubject].homeworkExamples.length > 0) {
-                    let examples = subjectFilters[currentSubject].homeworkExamples.map(e => `- ${e}`).join('\n');
-                    themTinNhanVaoGiaoDien("bot", `Chào bạn! Thầy có một vài dạng bài tập cơ bản mà em có thể tham khảo trong môn **${subjectFilters[currentSubject].name}** đây:\n${examples}\n\nEm hãy thử giải các bài tập này và hỏi thầy nếu có bất kỳ câu hỏi nào về cách làm nhé!`);
-                } else {
-                    themTinNhanVaoGiaoDien("bot", "Chào bạn! Hiện tại thầy chưa có sẵn bài tập cho môn này. Thay vào đó, em có thể hỏi thầy về cách làm một dạng bài tập nào đó, thầy sẽ hướng dẫn em nhé!");
-                }
-                return; // Rất quan trọng: Ngừng xử lý tại đây nếu là yêu cầu bài tập từ file
-            }
-            // --- KẾT THÚC LOGIC XỬ LÝ BÀI TẬP TỪ baitap.txt ---
-
+           if (isAskingForHomework) {
+    if (currentSubject && subjectFilters[currentSubject] && subjectFilters[currentSubject].homeworkExamples.length > 0) {
+        // Lấy ngẫu nhiên 3 câu từ danh sách bài tập
+        const randomExamples = getRandomItems(subjectFilters[currentSubject].homeworkExamples, 3);
+        const examples = randomExamples.map(e => `- ${e}`).join('\n');
+        
+        themTinNhanVaoGiaoDien("bot", 
+            `Dưới đây là 3 bài tập ngẫu nhiên môn **${subjectFilters[currentSubject].name}** để em thử sức:\n${examples}\n\n` +
+            `Em hãy làm thử và hỏi thầy nếu cần hướng dẫn nhé!`
+        );
+    } else {
+        themTinNhanVaoGiaoDien("bot", "Hiện chưa có bài tập cho môn này. Em có thể hỏi thầy về cách làm một dạng bài cụ thể nhé!");
+    }
+    return;
+}
 
             // Kiểm tra xem câu hỏi có phù hợp cấp tiểu học không
             if (!laCauHoiTieuHoc(tinNhanNguoiDung)) {
