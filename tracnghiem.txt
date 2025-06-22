@@ -1,823 +1,1348 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot học tập trường TH Thượng Ấm</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap');
-
-        body {
-            font-family: 'Quicksand', sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            background-color: #e0f7fa;
-            color: #333;
-            overflow: hidden;
-        }
-
-        #home-menu {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            flex-grow: 1;
-            padding: 20px;
-            text-align: center;
-            background-color: #ffffff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border-radius: 10px;
-            margin: 20px;
-        }
-
-        #home-menu h1 {
-            color: #26a69a;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-        }
-
-        .subject-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            width: 80%;
-            max-width: 900px;
-        }
-
-        .subject-button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 20px;
-            font-size: 1.2em;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-        .subject-button i {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-
-        .subject-button:hover {
-            background-color: #45a049;
-            transform: translateY(-3px);
-        }
-
-        #chatbot-container {
-            display: none;
-            flex-grow: 1;
-            flex-direction: row;
-            overflow: hidden;
-            background-color: #ffffff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border-radius: 10px;
-            margin: 20px;
-        }
-
-        #sidebar {
-            width: 200px;
-            background-color: #f0f4c3;
-            padding: 15px;
-            border-right: 1px solid #dce775;
-            display: flex;
-            flex-direction: column;
-            box-shadow: inset -2px 0 5px rgba(0,0,0,0.05);
-        }
-
-        #sidebar h3 {
-            color: #689f38;
-            margin-top: 0;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .sidebar-button {
-            background-color: #c5e1a5;
-            color: #333;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 10px;
-            margin-bottom: 10px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            text-align: left;
-            display: flex;
-            align-items: center;
-        }
-
-        .sidebar-button i {
-            margin-right: 10px;
-            font-size: 1.2em;
-        }
-
-        .sidebar-button.active, .sidebar-button:hover {
-            background-color: #8bc34a;
-            color: white;
-            transform: translateX(3px);
-        }
-
-        .chat-area {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        #khung-tro-chuyen {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 15px;
-            border-bottom: 1px solid #b2ebf2;
-            background-color: #ffffff;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .tin-nhan {
-            margin-bottom: 10px;
-            padding: 10px 15px;
-            border-radius: 20px;
-            max-width: 75%;
-            position: relative;
-            word-wrap: break-word;
-            line-height: 1.4;
-        }
-
-        .tin-nhan-nguoi-dung {
-            background-color: #007bff;
-            color: white;
-            margin-left: auto;
-            text-align: right;
-            border-bottom-right-radius: 5px;
-        }
-
-        .tin-nhan-bot {
-            background-color: #e3f2fd;
-            color: #212121;
-            margin-right: auto;
-            text-align: left;
-            border-bottom-left-radius: 5px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-        }
-
-        #khu-vuc-nhap {
-            display: flex;
-            padding: 15px;
-            background-color: #ffffff;
-            border-top: 1px solid #e0e0e0;
-            box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
-            align-items: center;
-        }
-
-        #o-nhap-tin-nhan {
-            flex-grow: 1;
-            padding: 12px 18px;
-            border: 1px solid #c5e1a5;
-            border-radius: 25px;
-            outline: none;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-        }
-
-        #o-nhap-tin-nhan:focus {
-            border-color: #8bc34a;
-            box-shadow: 0 0 0 3px rgba(139, 195, 74, 0.2);
-        }
-
-        #nut-gui {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 48px;
-            height: 48px;
-            margin-left: 15px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            transition: background-color 0.3s ease;
-        }
-
-        #nut-gui:hover {
-            background-color: #45a049;
-        }
-
-        #nut-gui:active {
-            transform: translateY(1px);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-
-        @media (max-width: 768px) {
-            #home-menu {
-                margin: 10px;
-                padding: 15px;
-            }
-
-            #home-menu h1 {
-                font-size: 1.8em;
-                margin-bottom: 20px;
-            }
-
-            .subject-buttons {
-                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-                gap: 15px;
-                width: 95%;
-            }
-
-            .subject-button {
-                padding: 15px;
-                font-size: 1em;
-            }
-
-            .subject-button i {
-                font-size: 2em;
-                margin-bottom: 8px;
-            }
-
-            #chatbot-container {
-                flex-direction: column;
-                margin: 10px;
-                border-radius: 8px;
-            }
-
-            #sidebar {
-                width: 100%;
-                height: auto;
-                border-right: none;
-                border-bottom: 1px solid #dce775;
-                padding: 10px;
-                box-shadow: inset 0 -2px 5px rgba(0,0,0,0.05);
-                flex-direction: row;
-                overflow-x: auto;
-                white-space: nowrap;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            #sidebar h3 {
-                display: none;
-            }
-
-            .sidebar-button {
-                flex-shrink: 0;
-                width: auto;
-                margin-bottom: 0;
-                margin-right: 10px;
-                padding: 8px 12px;
-                font-size: 0.9em;
-            }
-
-            .sidebar-button i {
-                font-size: 1em;
-                margin-right: 5px;
-            }
-
-            .chat-area {
-                min-height: 0;
-            }
-
-            #khung-tro-chuyen {
-                padding: 10px;
-            }
-
-            .tin-nhan {
-                max-width: 85%;
-                padding: 8px 12px;
-                font-size: 0.9em;
-            }
-
-            #khu-vuc-nhap {
-                padding: 10px;
-            }
-
-            #o-nhap-tin-nhan {
-                padding: 10px 15px;
-                font-size: 14px;
-            }
-
-            #nut-gui {
-                width: 40px;
-                height: 40px;
-                font-size: 20px;
-                margin-left: 10px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div id="home-menu">
-        <h1>Chatbot học tập trường TH Thượng Ấm</h1>
-        <div class="subject-buttons">
-            <button class="subject-button" data-subject="toan">
-                <i class="fas fa-calculator"></i>
-                Toán
-            </button>
-            <button class="subject-button" data-subject="tieng-viet">
-                <i class="fas fa-book-open"></i>
-                Tiếng Việt
-            </button>
-            <button class="subject-button" data-subject="tieng-anh">
-                <i class="fas fa-globe"></i>
-                Tiếng Anh
-            </button>
-            <button class="subject-button" data-subject="tin-hoc">
-                <i class="fas fa-laptop-code"></i>
-                Tin Học
-            </button>
-            <button class="subject-button" data-subject="cong-nghe">
-                <i class="fas fa-tools"></i>
-                Công Nghệ
-            </button>
-            <button class="subject-button" data-subject="lich-su-dia-ly">
-                <i class="fas fa-map-marked-alt"></i>
-                Lịch Sử & Địa Lý
-            </button>
-            <button class="subject-button" data-subject="khoa-hoc">
-                <i class="fas fa-flask"></i>
-                Khoa Học
-            </button>
-        </div>
-    </div>
-
-    <div id="chatbot-container">
-        <div id="sidebar">
-            <h3>Môn học</h3>
-            <button class="sidebar-button" data-subject="toan">
-                <i class="fas fa-calculator"></i>
-                Toán
-            </button>
-            <button class="sidebar-button" data-subject="tieng-viet">
-                <i class="fas fa-book-open"></i>
-                Tiếng Việt
-            </button>
-            <button class="sidebar-button" data-subject="tieng-anh">
-                <i class="fas fa-globe"></i>
-                Tiếng Anh
-            </button>
-            <button class="sidebar-button" data-subject="tin-hoc">
-                <i class="fas fa-laptop-code"></i>
-                Tin Học
-            </button>
-            <button class="sidebar-button" data-subject="cong-nghe">
-                <i class="fas fa-tools"></i>
-                Công Nghệ
-            </button>
-            <button class="sidebar-button" data-subject="lich-su-dia-ly">
-                <i class="fas fa-map-marked-alt"></i>
-                Lịch Sử & Địa Lý
-            </button>
-            <button class="sidebar-button" data-subject="khoa-hoc">
-                <i class="fas fa-flask"></i>
-                Khoa Học
-            </button>
-        </div>
-        <div class="chat-area">
-            <div id="khung-tro-chuyen">
-            </div>
-            <div id="khu-vuc-nhap">
-                <input type="text" id="o-nhap-tin-nhan" placeholder="Hỏi tôi điều gì đó...">
-                <button id="nut-gui">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script type="importmap">
-        {
-            "imports": {
-                "@google/generative-ai": "https://esm.run/@google/generative-ai"
-            }
-        }
-    </script>
-    <script type="module">
-        import { GoogleGenerativeAI } from "@google/generative-ai";
-
-        // Thay thế "YOUR_API_KEY" bằng khóa API thực tế của bạn
-        const KHOA_API = "AIzaSyAn9dMMM5u8dEGpI8mEzQvdMSuI8KFH8jM"; 
-        const moHinhAI = new GoogleGenerativeAI(KHOA_API);
-        const moHinh = moHinhAI.getGenerativeModel({ model: "gemini-2.0-flash-thinking-exp-01-21" });
-
-        const homeMenu = document.getElementById('home-menu');
-        const chatbotContainer = document.getElementById('chatbot-container');
-        const khungTroChuyen = document.getElementById('khung-tro-chuyen');
-        const oNhapTinNhan = document.getElementById('o-nhap-tin-nhan');
-        const nutGui = document.getElementById('nut-gui');
-        const subjectButtons = document.querySelectorAll('.subject-button');
-        const sidebarButtons = document.querySelectorAll('.sidebar-button');
-
-        let currentSubject = '';
-        let homeworkData = {}; // Đối tượng để lưu trữ dữ liệu bài tập từ baitap.txt
-// Thêm vào phần khai báo biến
-let multipleChoiceData = {}; // Đối tượng lưu trữ dữ liệu trắc nghiệm
-let currentQuiz = null; // Lưu trữ bài trắc nghiệm hiện tại
-let quizSubject = ''; // Môn học của bài trắc nghiệm hiện tại
-        // Định nghĩa các môn học và bộ lọc
-        const subjectFilters = {
-            "toan": {
-                name: "Toán",
-                excludeKeywords: ["đại số tuyến tính", "giải tích", "lượng tử", "phân tích chuyên sâu"],
-                homeworkExamples: [] // Sẽ được điền từ baitap.txt
-            },
-            "tieng-viet": {
-                name: "Tiếng Việt",
-                excludeKeywords: ["nghiên cứu văn học", "phân tích chuyên sâu", "triết học", "ngữ pháp nâng cao", "phản biện văn học"],
-                homeworkExamples: []
-            },
-            "tieng-anh": {
-                name: "Tiếng Anh",
-                excludeKeywords: ["advanced grammar", "literary analysis", "linguistics", "academic writing", "syntax"],
-                homeworkExamples: []
-            },
-            "tin-hoc": {
-                name: "Tin Học",
-                excludeKeywords: ["lập trình", "trí tuệ nhân tạo", "máy học", "công nghệ thông tin chuyên sâu", "thuật toán phức tạp", "mạng máy tính"],
-                homeworkExamples: []
-            },
-            "cong-nghe": {
-                name: "Công Nghệ",
-                excludeKeywords: ["kỹ thuật", "công nghệ cao", "tự động hóa", "robotics", "thiết kế mạch", "vật liệu mới"],
-                homeworkExamples: []
-            },
-            "lich-su-dia-ly": {
-                name: "Lịch Sử & Địa Lý",
-                excludeKeywords: ["nghiên cứu sử học", "phân tích địa chính trị", "kinh tế học", "xã hội học", "diễn biến phức tạp", "lý thuyết địa lý"],
-                homeworkExamples: []
-            },
-            "khoa-hoc": {
-                name: "Khoa Học",
-                excludeKeywords: ["vật lý lượng tử", "hóa học hữu cơ", "sinh học phân tử", "thiên văn học", "di truyền học", "nghiên cứu khoa học chuyên sâu"],
-                homeworkExamples: []
-            }
-        };
-
-        const generalExcludeKeywords = [
-            "đại học", "cao học", "nghiên cứu", "phân tích chuyên sâu", "vật lý hạt nhân", "triết học",
-            "kinh tế vĩ mô", "chính trị quốc tế", "chứng minh", "phản biện", "tôn giáo", "đức tin"
-        ];
-        // Các cụm từ người dùng có thể dùng để yêu cầu bài tập
-        const homeworkRequestPhrases = /(cho (tôi|em) bài tập|xin bài tập|gợi ý bài tập|bài tập về)/;
-function getRandomItems(array, count) {
-    const shuffled = [...array].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, Math.min(count, array.length));
-}
-async function loadMultipleChoiceData() {
-    try {
-        const response = await fetch('tracnghiem.txt');
-        if (!response.ok) {
-            throw new Error(`Lỗi HTTP! status: ${response.status}`);
-        }
-        const text = await response.text();
-        const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-
-        let currentSection = '';
-        let currentQuestion = null;
-        
-        for (const line of lines) {
-            if (line.startsWith('#')) {
-                currentSection = line.substring(1);
-                multipleChoiceData[currentSection] = [];
-            } else if (line.match(/^\d+\./)) {
-                // Bắt đầu câu hỏi mới
-                if (currentQuestion) {
-                    multipleChoiceData[currentSection].push(currentQuestion);
-                }
-                currentQuestion = {
-                    question: line.substring(line.indexOf('.') + 1).trim(),
-                    options: [],
-                    answer: ''
-                };
-            } else if (line.match(/^[A-D]\)/)) {
-                // Thêm lựa chọn
-                currentQuestion.options.push(line.trim());
-            } else if (line.startsWith('Đáp án:')) {
-                // Thêm đáp án
-                currentQuestion.answer = line.substring('Đáp án:'.length).trim();
-            }
-        }
-        // Thêm câu hỏi cuối cùng
-        if (currentQuestion && currentSection) {
-            multipleChoiceData[currentSection].push(currentQuestion);
-        }
-        
-        console.log("Dữ liệu trắc nghiệm đã tải:", multipleChoiceData);
-    } catch (error) {
-        console.error("Không thể tải dữ liệu trắc nghiệm:", error);
-        multipleChoiceData = {};
-    }
-}
-        // Hàm để tải và phân tích dữ liệu bài tập từ baitap.txt
-        async function loadHomeworkData() {
-            try {
-                const response = await fetch('baitap.txt');
-                if (!response.ok) {
-                    throw new Error(`Lỗi HTTP! status: ${response.status}`);
-                }
-                const text = await response.text();
-                // Tách các dòng, loại bỏ khoảng trắng và dòng trống
-                const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-
-                let currentSection = '';
-                for (const line of lines) {
-                    if (line.startsWith('#')) {
-                        currentSection = line.substring(1); // Lấy khóa môn học (vd: "toan")
-                        homeworkData[currentSection] = []; // Khởi tạo mảng rỗng cho môn học này
-                    } else if (currentSection && homeworkData[currentSection]) {
-                        homeworkData[currentSection].push(line); // Thêm bài tập vào môn học hiện tại
-                    }
-                }
-                // Điền dữ liệu bài tập đã tải vào subjectFilters
-                for (const subjectKey in homeworkData) {
-                    if (subjectFilters[subjectKey]) {
-                        subjectFilters[subjectKey].homeworkExamples = homeworkData[subjectKey];
-                    }
-                }
-                console.log("Dữ liệu bài tập đã tải:", homeworkData);
-            } catch (error) {
-                console.error("Không thể tải dữ liệu bài tập:", error);
-                // Đặt lại homeworkExamples thành rỗng nếu có lỗi
-                for (const key in subjectFilters) {
-                    subjectFilters[key].homeworkExamples = [];
-                }
-            }
-        }
-
-        // Tải dữ liệu bài tập khi script bắt đầu
-        loadHomeworkData();
-loadMultipleChoiceData();
-
-        // Gán sự kiện cho các nút chọn môn học ở trang chủ
-        subjectButtons.forEach(button => {
-            button.addEventListener('click', () => selectSubject(button.dataset.subject));
-        });
-
-        // Gán sự kiện cho các nút chọn môn học ở thanh sidebar
-        sidebarButtons.forEach(button => {
-            button.addEventListener('click', () => selectSubject(button.dataset.subject));
-        });
-
-        // Gán sự kiện cho nút gửi tin nhắn
-        nutGui.addEventListener('click', guiTinNhan);
-        // Gán sự kiện cho phím Enter trong ô nhập tin nhắn
-        oNhapTinNhan.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                guiTinNhan();
-            }
-        });
-
-        /**
-         * Chuyển đổi giữa menu chọn môn học và giao diện chatbot.
-         * Đặt môn học hiện tại và hiển thị lời chào.
-         * @param {string} subject - Khóa của môn học được chọn (vd: "toan").
-         */
-        function selectSubject(subject) {
-            currentSubject = subject;
-            homeMenu.style.display = 'none';
-            chatbotContainer.style.display = 'flex';
-            khungTroChuyen.innerHTML = ''; // Xóa tin nhắn cũ khi đổi môn
-            themTinNhanVaoGiaoDien("bot", `Chào mừng bạn đến với môn ${subjectFilters[subject].name}! Tôi có thể giúp gì cho bạn?`);
-
-            // Đặt trạng thái 'active' cho nút sidebar tương ứng
-            sidebarButtons.forEach(button => {
-                if (button.dataset.subject === subject) {
-                    button.classList.add('active');
-                } else {
-                    button.classList.remove('active');
-                }
-            });
-        }
-
-        /**
-         * Thêm tin nhắn vào giao diện trò chuyện.
-         * @param {string} nguoiGui - Người gửi tin nhắn ("nguoi-dung" hoặc "bot").
-         * @param {string} vanBan - Nội dung tin nhắn.
-         */
-        function themTinNhanVaoGiaoDien(nguoiGui, vanBan) {
-            const divTinNhan = document.createElement('div');
-            divTinNhan.classList.add('tin-nhan', `tin-nhan-${nguoiGui}`);
-
-            // Chuyển đổi định dạng markdown cơ bản (in đậm, xuống dòng)
-            let formattedText = vanBan.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            formattedText = formattedText.replace(/\n/g, '<br>');
-
-            divTinNhan.innerHTML = formattedText;
-            khungTroChuyen.appendChild(divTinNhan);
-            // Cuộn xuống cuối khung trò chuyện
-            khungTroChuyen.scrollTop = khungTroChuyen.scrollHeight;
-        }
-
-      // Hàm bổ sung: Chọn ngẫu nhiên 10 câu từ danh sách
-function getRandomQuestions(questions, count) {
-    const shuffled = [...questions].sort(() => 0.5 - Math.random());
-    if (shuffled.length >= count) return shuffled.slice(0, count);
-    
-    // Lặp lại câu hỏi nếu không đủ
-    const repeated = [];
-    while (repeated.length < count) {
-        repeated.push(...shuffled);
-    }
-    return repeated.slice(0, count);
-}
-function startMultipleChoiceQuiz(subject, topicKey) {
-    if (!multipleChoiceData[topicKey] || multipleChoiceData[topicKey].length < 5) {
-        themTinNhanVaoGiaoDien("bot", `❌  Hiện chưa có đủ bài tập trắc nghiệm cho phần này `);
-        return;
-    }
-
-    // Lấy ngẫu nhiên 10 câu (lặp lại nếu cần)
-    const questions = getRandomQuestions(multipleChoiceData[topicKey], 10);
-    
-    quizSubject = subject;
-    currentQuiz = {
-        questions: questions,
-        currentQuestionIndex: 0,
-        userAnswers: [],
-        score: 0
-    };
-    
-    themTinNhanVaoGiaoDien("bot", `📝 Bắt đầu bài trắc nghiệm 10 câu (thang điểm 10):`);
-    showNextQuestion();
-}
-
-function showNextQuestion() {
-    if (currentQuiz.currentQuestionIndex >= currentQuiz.questions.length) {
-        // Kết thúc bài trắc nghiệm
-        finishQuiz();
-        return;
-    }
-    
-    const question = currentQuiz.questions[currentQuiz.currentQuestionIndex];
-    let message = `Câu ${currentQuiz.currentQuestionIndex + 1}: ${question.question}\n`;
-    question.options.forEach(option => {
-        message += `${option}\n`;
-    });
-    message += "\nHãy nhập đáp án của bạn (ví dụ: A, B, C hoặc D)";
-    
-    themTinNhanVaoGiaoDien("bot", message);
-}
-
-function finishQuiz() {
-    const score = (currentQuiz.score / 10) * 10; // Luôn tính trên 10 câu
-    
-    let resultMessage = `🏁 KẾT QUẢ (10/10 câu)\n`;
-    resultMessage += `✅ Đúng: ${currentQuiz.score} câu = ${score}/10 điểm\n\n`;
-    resultMessage += "📌 Các câu sai:\n";
-    
-    currentQuiz.questions.forEach((q, i) => {
-        if (currentQuiz.userAnswers[i] !== q.answer) {
-            resultMessage += `Câu ${i+1}: Bạn chọn "${currentQuiz.userAnswers[i] || '❌'}" → Đáp án đúng: ${q.answer}\n`;
-        }
-    });
-    
-    themTinNhanVaoGiaoDien("bot", resultMessage);
-    currentQuiz = null;
-}
-function handleQuizAnswer(answer) {
-    const currentQuestion = currentQuiz.questions[currentQuiz.currentQuestionIndex];
-    const userAnswer = answer.trim().toUpperCase();
-    
-    // Kiểm tra đáp án
-    if (['A', 'B', 'C', 'D'].includes(userAnswer)) {
-        currentQuiz.userAnswers.push(userAnswer);
-        
-        if (userAnswer === currentQuestion.answer) {
-            currentQuiz.score++;
-            themTinNhanVaoGiaoDien("bot", "Chính xác! 🎉");
-        } else {
-            let explanation = `Sai rồi. Đáp án đúng là ${currentQuestion.answer}.\n`;
-            explanation += `Giải thích vì sao đáp án đúng là: ${currentQuestion.explanation || 'Câu này cần áp dụng kiến thức cơ bản trong chương trình tiểu học'}`;
-            themTinNhanVaoGiaoDien("bot", explanation);
-        }
-        
-        // Chuyển sang câu hỏi tiếp theo
-        currentQuiz.currentQuestionIndex++;
-        setTimeout(() => showNextQuestion(), 1500);
-    } else {
-        themTinNhanVaoGiaoDien("bot", "Vui lòng nhập đáp án là A, B, C hoặc D (ví dụ: A, B, ...)");
-    }
-}
-function handleTopicRequest(message) {
-    const regex = /(toán|tiếng việt|khoa học)\s*lớp\s*(\d+)\s*chủ đề\s*(\d+)/i;
-    const match = message.match(regex);
-    
-    if (match) {
-        const subjectKey = convertSubjectToKey(match[1]);
-        const topicKey = `${subjectKey}-lop${match[2]}-chude${match[3]}`;
-        startMultipleChoiceQuiz(subjectKey, topicKey);
-        return true;
-    }
-    return false;
-}
-        async function guiTinNhan() {
-    const tinNhanNguoiDung = oNhapTinNhan.value.trim();
-    if (!tinNhanNguoiDung) return;
-
-    themTinNhanVaoGiaoDien("nguoi-dung", tinNhanNguoiDung);
-    oNhapTinNhan.value = '';
-
-    // Xử lý nếu đang trong chế độ trắc nghiệm
-    if (currentQuiz) {
-        handleQuizAnswer(tinNhanNguoiDung);
-        return;
-    }
-
-    // Kiểm tra yêu cầu bài tập trắc nghiệm
-    const isAskingForMultipleChoice = /(bài tập trắc nghiệm|trắc nghiệm|bài tập TN)/i.test(tinNhanNguoiDung);
-    if (isAskingForMultipleChoice) {
-        startMultipleChoiceQuiz(currentSubject);
-        return;
-    }
-
-            // Xử lý lời chào đơn giản
-            const loiChao = ["chào", "hello", "hi"];
-            if (loiChao.some(chao => tinNhanNguoiDung.toLowerCase().includes(chao))) {
-                themTinNhanVaoGiaoDien("bot", `Chào bạn! Tôi là một chatbot AI được thiết kế để trả lời các câu hỏi cấp tiểu học cho môn ${subjectFilters[currentSubject].name}. Bạn có câu hỏi gì không?`);
-                return;
-            }
-
-            // --- LOGIC XỬ LÝ YÊU CẦU BÀI TẬP TỪ baitap.txt ---
-            const isAskingForHomework = homeworkRequestPhrases.test(tinNhanNguoiDung.toLowerCase());
-
-           if (isAskingForHomework) {
-    if (currentSubject && subjectFilters[currentSubject] && subjectFilters[currentSubject].homeworkExamples.length > 0) {
-        // Lấy ngẫu nhiên 3 câu từ danh sách bài tập
-        const randomExamples = getRandomItems(subjectFilters[currentSubject].homeworkExamples, 3);
-        const examples = randomExamples.map(e => `- ${e}`).join('\n');
-        
-        themTinNhanVaoGiaoDien("bot", 
-            `Dưới đây là 3 bài tập ngẫu nhiên môn **${subjectFilters[currentSubject].name}** để em thử sức:\n${examples}\n\n` +
-            `Em hãy làm thử và hỏi thầy nếu cần hướng dẫn nhé!`
-        );
-    } else {
-        themTinNhanVaoGiaoDien("bot", "Hiện chưa có bài tập cho môn này. Em có thể hỏi thầy về cách làm một dạng bài cụ thể nhé!");
-    }
-    return;
-}
-
-            // Kiểm tra xem câu hỏi có phù hợp cấp tiểu học không
-            if (!laCauHoiTieuHoc(tinNhanNguoiDung)) {
-                themTinNhanVaoGiaoDien("bot", "Xin lỗi, tôi chỉ có thể giúp bạn với các câu hỏi và bài tập ở cấp độ tiểu học. Vui lòng hỏi những câu hỏi phù hợp hơn nhé.");
-                return;
-            }
-
-            // Gửi câu hỏi đến mô hình AI nếu không phải là yêu cầu bài tập từ file và phù hợp cấp tiểu học
-            try {
-                const loiNhac = `Bạn là một giáo viên AI thân thiện và hữu ích (lưu ý xưng hô với người dùng là thầy - em), chuyên giải đáp các câu hỏi và gợi ý cách làm bài tập cho học sinh tiểu học trong môn ${subjectFilters[currentSubject].name}. Hãy trả lời một cách đơn giản, dễ hiểu, và chỉ tập trung vào kiến thức cấp tiểu học. Tuyệt đối không giải bài tập cụ thể, chỉ gợi ý phương pháp hoặc hướng dẫn. Nếu câu hỏi không phù hợp cấp tiểu học hoặc yêu cầu giải bài tập chi tiết, hãy từ chối một cách nhẹ nhàng và lịch sự. Nếu người dùng xin bài tập để làm thì cũng có thể được.
-                \n\nCâu hỏi: ${tinNhanNguoiDung}`;
-
-                const ketQua = await moHinh.generateContent(loiNhac);
-                const phanHoi = await ketQua.response;
-                const traLoiBot = phanHoi.text();
-                themTinNhanVaoGiaoDien("bot", traLoiBot);
-
-            } catch (loi) {
-                console.error("Lỗi khi gọi API Gemini: ", loi);
-                themTinNhanVaoGiaoDien("bot", "Rất tiếc, có lỗi xảy ra. Vui lòng thử lại sau nhé!");
-            }
-        }
-
-        /**
-         * Kiểm tra xem câu hỏi có phù hợp với cấp độ tiểu học hay không.
-         * @param {string} cauHoi - Câu hỏi của người dùng.
-         * @returns {boolean} - True nếu phù hợp, False nếu không.
-         */
-        function laCauHoiTieuHoc(cauHoi) {
-            const cauHoiThuong = cauHoi.toLowerCase();
-
-            // Kiểm tra các từ khóa loại trừ chung
-            const laKhongTieuHocChung = generalExcludeKeywords.some(tuKhoa => cauHoiThuong.includes(tuKhoa));
-            if (laKhongTieuHocChung) return false;
-
-            // Kiểm tra các từ khóa loại trừ theo môn học cụ thể
-            if (currentSubject && subjectFilters[currentSubject]) {
-                const subjectSpecificKeywords = subjectFilters[currentSubject].excludeKeywords;
-                const laKhongTieuHocMonHoc = subjectSpecificKeywords.some(tuKhoa => cauHoiThuong.includes(tuKhoa));
-                if (laKhongTieuHocMonHoc) return false;
-            }
-
-            return true;
-        }
-
-        // Hàm này không còn quyết định hành vi chính mà chỉ hỗ trợ regex cho homeworkRequestPhrases
-        function laYeuCauGiaiBaiTap(cauHoi) {
-            const cauHoiThuong = cauHoi.toLowerCase();
-            return homeworkRequestPhrases.test(cauHoiThuong);
-        }
-    </script>
-</body>
-</html>
+#toan-lop4-chude1
+Số "Bốn mươi lăm nghìn ba trăm hai mươi tám" viết là:
+A) 45 238
+B) 45 328
+C) 45 382
+D) 45 832
+Đáp án: B
+
+Giá trị của chữ số 7 trong số 57 362 là:
+A) 7
+B) 70
+C) 700
+D) 7 000
+Đáp án: D
+
+Số liền sau của 29 999 là:
+A) 30 000
+B) 29 998
+C) 29 990
+D) 30 001
+Đáp án: A
+
+Kết quả của 15 000 + 8 000 là:
+A) 23 000
+B) 22 000
+C) 21 000
+D) 20 000
+Đáp án: A
+
+Số chẵn lớn nhất có 5 chữ số là:
+A) 99 999
+B) 99 998
+C) 98 888
+D) 99 990
+Đáp án: B
+
+Biểu thức 25 000 + x = 40 000. Giá trị của x là:
+A) 10 000
+B) 15 000
+C) 20 000
+D) 25 000
+Đáp án: B
+
+Trong các số sau, số nào là số lẻ?
+A) 24 680
+B) 35 791
+C) 46 802
+D) 57 924
+Đáp án: B
+
+Kết quả của 12 345 + 23 456 là:
+A) 35 701
+B) 35 801
+C) 35 791
+D) 35 891
+Đáp án: B
+
+Số bé nhất trong các số: 45 678, 45 768, 45 687, 45 876 là:
+A) 45 678
+B) 45 687
+C) 45 768
+D) 45 876
+Đáp án: A
+
+Giá trị của biểu thức a + b với a = 12 345 và b = 23 456 là:
+A) 35 701
+B) 35 801
+C) 35 791
+D) 35 891
+Đáp án: B
+
+#toan-lop4-chude2
+Góc nào có số đo bằng 90 độ?
+A) Góc nhọn
+B) Góc tù
+C) Góc vuông
+D) Góc bẹt
+Đáp án: C
+
+Góc lớn hơn 90 độ nhưng nhỏ hơn 180 độ gọi là:
+A) Góc nhọn
+B) Góc tù
+C) Góc vuông
+D) Góc bẹt
+Đáp án: B
+
+Dụng cụ nào dùng để đo góc?
+A) Thước kẻ
+B) Thước đo độ
+C) Compa
+D) Ê-ke
+Đáp án: B
+
+Góc bẹt có số đo là:
+A) 90 độ
+B) 100 độ
+C) 180 độ
+D) 360 độ
+Đáp án: C
+
+Trong các góc sau, góc nào là góc nhọn?
+A) 45 độ
+B) 90 độ
+C) 120 độ
+D) 180 độ
+Đáp án: A
+
+Hai đường thẳng vuông góc tạo thành mấy góc vuông?
+A) 1
+B) 2
+C) 3
+D) 4
+Đáp án: D
+
+Góc nào bé nhất trong các góc: 15 độ, 30 độ, 45 độ, 60 độ?
+A) 15 độ
+B) 30 độ
+C) 45 độ
+D) 60 độ
+Đáp án: A
+
+Một góc bằng 1/4 góc bẹt có số đo là:
+A) 45 độ
+B) 60 độ
+C) 90 độ
+D) 120 độ
+Đáp án: A
+
+Hai đường thẳng cắt nhau tạo thành 4 góc, mỗi góc bằng 90 độ. Hai đường thẳng đó gọi là:
+A) Song song
+B) Vuông góc
+C) Trùng nhau
+D) Cắt nhau
+Đáp án: B
+
+Góc tù là góc:
+A) Nhỏ hơn 90 độ
+B) Bằng 90 độ
+C) Lớn hơn 90 độ và nhỏ hơn 180 độ
+D) Bằng 180 độ
+Đáp án: C
+
+#toan-lop4-chude3
+Số "Hai trăm nghìn" viết là:
+A) 20 000
+B) 200 000
+C) 2 000 000
+D) 200
+Đáp án: B
+
+Số 1 000 000 đọc là:
+A) Một trăm nghìn
+B) Một triệu
+C) Mười triệu
+D) Một tỷ
+Đáp án: B
+
+Chữ số 5 trong số 5 432 100 có giá trị là:
+A) 5 000
+B) 50 000
+C) 500 000
+D) 5 000 000
+Đáp án: D
+
+Lớp triệu gồm các hàng:
+A) Trăm, chục, đơn vị
+B) Trăm nghìn, chục nghìn, nghìn
+C) Trăm triệu, chục triệu, triệu
+D) Trăm tỷ, chục tỷ, tỷ
+Đáp án: C
+
+Số bé nhất có 6 chữ số là:
+A) 100 000
+B) 999 999
+C) 99 999
+D) 1 000 000
+Đáp án: A
+
+Số lớn nhất có 6 chữ số là:
+A) 100 000
+B) 999 999
+C) 99 999
+D) 1 000 000
+Đáp án: B
+
+Số 345 678 làm tròn đến hàng trăm nghìn là:
+A) 300 000
+B) 340 000
+C) 350 000
+D) 400 000
+Đáp án: A
+
+So sánh: 456 789 ... 456 798
+A) >
+B) <
+C) =
+D) Không so sánh được
+Đáp án: B
+
+Số nào lớn nhất: 123 456, 123 465, 123 546, 123 564
+A) 123 456
+B) 123 465
+C) 123 546
+D) 123 564
+Đáp án: D
+
+Số liền trước của 1 000 000 là:
+A) 999 999
+B) 999 990
+C) 1 000 001
+D) 999 000
+Đáp án: A
+
+#toan-lop4-chude4
+1 tạ bằng bao nhiêu yến?
+A) 5 yến
+B) 10 yến
+C) 15 yến
+D) 20 yến
+Đáp án: B
+
+5 tấn = ... kg?
+A) 500 kg
+B) 5 000 kg
+C) 50 000 kg
+D) 500 000 kg
+Đáp án: B
+
+Đơn vị nào dùng để đo diện tích?
+A) Mét khối (m³)
+B) Mét vuông (m²)
+C) Mét (m)
+D) Lít (l)
+Đáp án: B
+
+2 giờ 15 phút = ... phút?
+A) 125 phút
+B) 135 phút
+C) 215 phút
+D) 235 phút
+Đáp án: B
+
+Thế kỉ XXI bắt đầu từ năm nào?
+A) 2000
+B) 2001
+C) 2100
+D) 2101
+Đáp án: B
+
+10 dm² = ... cm²?
+A) 100 cm²
+B) 1 000 cm²
+C) 10 000 cm²
+D) 100 000 cm²
+Đáp án: B
+
+Kết quả của 3 tấn + 2 tạ = ... kg?
+A) 3 200 kg
+B) 5 000 kg
+C) 32 000 kg
+D) 500 kg
+Đáp án: A
+
+1 thế kỉ = ... năm?
+A) 10 năm
+B) 100 năm
+C) 1 000 năm
+D) 10 000 năm
+Đáp án: B
+
+Diện tích hình vuông cạnh 5 cm là:
+A) 10 cm²
+B) 20 cm²
+C) 25 cm²
+D) 30 cm²
+Đáp án: C
+
+7 m² 15 dm² = ... dm²?
+A) 715 dm²
+B) 7 015 dm²
+C) 7 150 dm²
+D) 70 150 dm²
+Đáp án: A
+
+#toan-lop4-chude5
+Kết quả của 456 789 + 123 456 là:
+A) 580 245
+B) 579 245
+C) 580 145
+D) 579 145
+Đáp án: A
+
+Hiệu của 900 000 và 123 456 là:
+A) 776 544
+B) 777 544
+C) 776 454
+D) 777 454
+Đáp án: A
+
+Tính chất nào đúng với phép cộng?
+A) Giao hoán
+B) Kết hợp
+C) Cả A và B
+D) Không có tính chất nào
+Đáp án: C
+
+Tổng của số lớn nhất có 6 chữ số và số nhỏ nhất có 5 chữ số là:
+A) 1 000 999
+B) 1 009 999
+C) 1 099 999
+D) 1 999 999
+Đáp án: C
+
+Tìm x biết: x - 234 567 = 123 456
+A) 111 111
+B) 358 023
+C) 357 023
+D) 358 013
+Đáp án: B
+
+Kết quả của 1 000 000 - 999 999 là:
+A) 1
+B) 0
+C) 10
+D) 100
+Đáp án: A
+
+Phép tính nào sai?
+A) 345 + 123 = 468
+B) 1 000 - 99 = 901
+C) 456 + 654 = 1 110
+D) 789 - 123 = 666
+Đáp án: B
+
+Tổng của 678 và 322 là:
+A) 900
+B) 1 000
+C) 990
+D) 1 010
+Đáp án: B
+
+Hiệu của 50 000 và 12 345 là:
+A) 37 655
+B) 38 655
+C) 37 555
+D) 38 555
+Đáp án: A
+
+Tìm số bị trừ biết hiệu là 45 678 và số trừ là 12 345:
+A) 58 023
+B) 33 333
+C) 57 023
+D) 58 013
+Đáp án: A
+
+#toan-lop4-chude6
+Hai đường thẳng vuông góc tạo thành bao nhiêu góc vuông?
+A) 1
+B) 2
+C) 3
+D) 4
+Đáp án: D
+
+Dụng cụ nào dùng để kiểm tra hai đường thẳng song song?
+A) Thước đo góc
+B) Ê-ke
+C) Thước thẳng
+D) Compa
+Đáp án: B
+
+Hai đường thẳng không bao giờ cắt nhau gọi là:
+A) Vuông góc
+B) Song song
+C) Trùng nhau
+D) Cắt nhau
+Đáp án: B
+
+Góc tạo bởi hai đường thẳng vuông góc có số đo là:
+A) 45°
+B) 90°
+C) 180°
+D) 360°
+Đáp án: B
+
+Hình nào sau đây có hai cặp cạnh song song?
+A) Hình tam giác
+B) Hình vuông
+C) Hình tròn
+D) Hình bình hành
+Đáp án: B, D
+
+Nếu một đường thẳng cắt hai đường thẳng song song thì:
+A) Tạo thành các góc bằng nhau
+B) Tạo thành các góc vuông
+C) Không tạo thành góc nào
+D) Cả A và B
+Đáp án: A
+
+Hai đường thẳng vuông góc với đường thẳng thứ ba thì:
+A) Song song
+B) Vuông góc
+C) Cắt nhau
+D) Trùng nhau
+Đáp án: A
+
+Trong hình chữ nhật, các cặp cạnh nào song song?
+A) Chiều dài và chiều rộng
+B) Hai chiều dài
+C) Hai chiều rộng
+D) Cả B và C
+Đáp án: D
+
+Góc nhọn tạo bởi hai đường thẳng cắt nhau có số đo:
+A) < 90°
+B) = 90°
+C) > 90°
+D) = 180°
+Đáp án: A
+
+Hình thoi có bao nhiêu cặp cạnh song song?
+A) 0
+B) 1
+C) 2
+D) 3
+Đáp án: C
+
+#toan-lop4-chude7
+Số 5 678 901 thuộc lớp nào?
+A) Lớp nghìn
+B) Lớp triệu
+C) Lớp đơn vị
+D) Lớp trăm
+Đáp án: B
+
+Kết quả của 123 456 + 654 321 là:
+A) 777 777
+B) 777 767
+C) 777 787
+D) 777 877
+Đáp án: A
+
+Góc nào lớn hơn góc vuông?
+A) Góc nhọn
+B) Góc tù
+C) Góc bẹt
+D) Cả B và C
+Đáp án: D
+
+2 tấn 5 tạ = ... kg?
+A) 250 kg
+B) 2 500 kg
+C) 25 000 kg
+D) 250 000 kg
+Đáp án: B
+
+Số liền trước của 1 000 000 là:
+A) 999 999
+B) 999 990
+C) 1 000 001
+D) 999 000
+Đáp án: A
+
+Hai đường thẳng song song không bao giờ:
+A) Cắt nhau
+B) Vuông góc
+C) Tạo góc nhọn
+D) Cả A, B, C
+Đáp án: A
+
+Giá trị của biểu thức 12 345 + a với a = 7 654 là:
+A) 19 999
+B) 20 000
+C) 19 990
+D) 20 999
+Đáp án: A
+
+Số chẵn lớn nhất có 6 chữ số là:
+A) 999 999
+B) 999 998
+C) 888 888
+D) 999 990
+Đáp án: B
+
+Kết quả của 1 000 000 - 123 456 là:
+A) 876 544
+B) 877 544
+C) 876 454
+D) 877 454
+Đáp án: A
+
+Phép tính nào đúng?
+A) 456 × 0 = 0
+B) 123 + 0 = 0
+C) 789 - 0 = 0
+D) 0 : 100 = 100
+Đáp án: A
+
+#toan-lop4-chude8
+Kết quả của 123 × 4 là:
+A) 487
+B) 492
+C) 482
+D) 486
+Đáp án: B
+
+Tính: 1 000 × 100 = ...
+A) 10 000
+B) 100 000
+C) 1 000 000
+D) 10 000 000
+Đáp án: B
+
+Số dư của phép chia 45 678 : 12 là:
+A) 0
+B) 6
+C) 10
+D) 12
+Đáp án: B
+
+Tìm x biết: x × 5 = 12 345
+A) 2 469
+B) 2 479
+C) 2 489
+D) 2 499
+Đáp án: A
+
+Kết quả của 360 : 12 là:
+A) 20
+B) 30
+C) 40
+D) 50
+Đáp án: B
+
+Tính chất nào đúng với phép nhân?
+A) Giao hoán
+B) Kết hợp
+C) Phân phối
+D) Cả A, B, C
+Đáp án: D
+
+Kết quả của 25 × 40 là:
+A) 100
+B) 1 000
+C) 10 000
+D) 100 000
+Đáp án: B
+
+Số chia hết cho 2 và 5 có chữ số tận cùng là:
+A) 0
+B) 2
+C) 5
+D) 8
+Đáp án: A
+
+Trung bình cộng của 10, 20, 30 là:
+A) 15
+B) 20
+C) 25
+D) 30
+Đáp án: B
+
+Một cửa hàng bán 15 quyển vở, mỗi quyển giá 12 000 đồng. Tổng số tiền thu được là:
+A) 180 000 đồng
+B) 150 000 đồng
+C) 200 000 đồng
+D) 120 000 đồng
+Đáp án: A
+
+#toan-lop4-chude9
+Dãy số liệu: 5, 7, 9, 11, 13 có số trung bình cộng là:
+A) 7
+B) 9
+C) 11
+D) 13
+Đáp án: B
+
+Biểu đồ cột dùng để:
+A) So sánh số liệu
+B) Tính tổng
+C) Chỉ ra xu hướng
+D) Cả A và C
+Đáp án: A
+
+Xác suất để gieo một con xúc xắc ra mặt 6 là:
+A) 1/2
+B) 1/6
+C) 1/3
+D) 1/4
+Đáp án: B
+
+Số lần xuất hiện của số 5 trong dãy: 5, 3, 5, 7, 5 là:
+A) 1
+B) 2
+C) 3
+D) 4
+Đáp án: C
+
+Nếu tung đồng xu 1 lần, xác suất ra mặt ngửa là:
+A) 0
+B) 1/2
+C) 1
+D) 2
+Đáp án: B
+
+Dãy số liệu nào có số trung bình cộng là 10?
+A) 5, 10, 15
+B) 8, 10, 12
+C) 10, 20, 30
+D) 2, 4, 6
+Đáp án: B
+
+Biểu đồ cột biểu diễn số học sinh giỏi của 3 lớp: Lớp A (15), Lớp B (20), Lớp C (10). Lớp nào có cột cao nhất?
+A) Lớp A
+B) Lớp B
+C) Lớp C
+D) Không so sánh được
+Đáp án: B
+
+Xác suất để chọn được một số chẵn từ các số 1, 2, 3, 4, 5 là:
+A) 1/5
+B) 2/5
+C) 3/5
+D) 4/5
+Đáp án: B
+
+Số trung bình cộng của 4, 8, 12 là:
+A) 6
+B) 8
+C) 10
+D) 12
+Đáp án: B
+
+Một túi có 3 viên bi đỏ và 2 viên bi xanh. Xác suất lấy được bi đỏ là:
+A) 2/5
+B) 3/5
+C) 1/5
+D) 4/5
+Đáp án: B
+
+#toan-lop4-chude10
+Phân số nào biểu diễn phần tô đậm trong hình vuông chia thành 8 phần bằng nhau, tô đậm 3 phần?
+A) 3/8
+B) 5/8
+C) 8/3
+D) 8/5
+Đáp án: A
+
+Phân số bằng 2/3 là:
+A) 4/6
+B) 6/9
+C) 8/12
+D) Cả A, B, C
+Đáp án: D
+
+Rút gọn phân số 15/25 về tối giản:
+A) 3/5
+B) 5/3
+C) 1/5
+D) 3/10
+Đáp án: A
+
+Quy đồng mẫu số 1/2 và 1/3 được:
+A) 3/6 và 2/6
+B) 2/6 và 3/6
+C) 1/6 và 1/6
+D) 4/6 và 5/6
+Đáp án: A
+
+Phân số nào lớn nhất: 1/2, 2/3, 3/4, 4/5?
+A) 1/2
+B) 2/3
+C) 3/4
+D) 4/5
+Đáp án: D
+
+Kết quả của 3/4 + 1/2 là:
+A) 4/6
+B) 5/4
+C) 1 1/4
+D) 1 1/2
+Đáp án: B
+
+Phân số 9/12 sau khi rút gọn là:
+A) 3/4
+B) 2/3
+C) 1/2
+D) 4/5
+Đáp án: A
+
+So sánh: 2/5 ... 3/7
+A) >
+B) <
+C) =
+D) Không so sánh được
+Đáp án: B
+
+Tìm x biết: x × 2/3 = 4/6
+A) 1
+B) 2
+C) 3
+D) 4
+Đáp án: A
+
+Phân số nào nhỏ hơn 1?
+A) 5/4
+B) 3/2
+C) 7/8
+D) 9/8
+Đáp án: C
+
+#toan-lop4-chude11
+Kết quả của 2/5 + 1/5 là:
+A) 3/5
+B) 3/10
+C) 1/5
+D) 4/5
+Đáp án: A
+
+Tính: 7/8 - 3/8 = ...
+A) 4/8
+B) 1/2
+C) 10/8
+D) Cả A và B
+Đáp án: D
+
+Quy đồng mẫu số 1/4 và 2/3 được:
+A) 3/12 và 8/12
+B) 4/12 và 6/12
+C) 1/12 và 2/12
+D) 2/12 và 3/12
+Đáp án: A
+
+Kết quả của 5/6 - 1/3 là:
+A) 4/3
+B) 1/2
+C) 3/6
+D) 4/6
+Đáp án: B
+
+Tính: 2/3 + 1/4 = ...
+A) 3/7
+B) 11/12
+C) 3/12
+D) 5/12
+Đáp án: B
+
+Phép tính nào đúng?
+A) 1/2 + 1/2 = 1
+B) 3/4 - 1/4 = 1/2
+C) 2/5 + 3/5 = 1
+D) Cả A, B, C
+Đáp án: D
+
+Hiệu của 7/8 và 1/2 là:
+A) 6/8
+B) 3/8
+C) 5/8
+D) 4/8
+Đáp án: B
+
+Tổng của 1/6 và 1/3 là:
+A) 2/9
+B) 1/2
+C) 1/9
+D) 2/6
+Đáp án: B
+
+Kết quả của 4/5 - 2/10 là:
+A) 2/5
+B) 3/5
+C) 6/10
+D) 2/10
+Đáp án: B
+
+Tính: 3/4 + 2/4 - 1/4 = ...
+A) 4/4
+B) 1
+C) 6/4
+D) Cả A và B
+Đáp án: D
+
+#toan-lop4-chude12
+Kết quả của 2/3 × 4/5 là:
+A) 6/15
+B) 8/15
+C) 6/8
+D) 8/3
+Đáp án: B
+
+Tính: 1/2 : 1/4 = ...
+A) 1/8
+B) 2
+C) 4/2
+D) 1/2
+Đáp án: B
+
+2/5 của 25 là:
+A) 5
+B) 10
+C) 15
+D) 20
+Đáp án: B
+
+Kết quả của 3/7 × 2/5 là:
+A) 6/35
+B) 5/12
+C) 15/14
+D) 14/15
+Đáp án: A
+
+Tìm x biết: x × 3/4 = 9/12
+A) 1
+B) 2
+C) 3
+D) 4
+Đáp án: A
+
+Kết quả của 5/6 : 2/3 là:
+A) 10/18
+B) 5/4
+C) 15/12
+D) 7/6
+Đáp án: B
+
+1/3 của 18 là:
+A) 3
+B) 6
+C) 9
+D) 12
+Đáp án: B
+
+Phép tính nào sai?
+A) 2/3 × 0 = 0
+B) 1/2 : 1/2 = 1
+C) 3/4 × 4/3 = 1
+D) 5/6 × 6/5 = 0
+Đáp án: D
+
+Kết quả của 4/5 × 5/4 là:
+A) 0
+B) 1
+C) 20/20
+D) Cả B và C
+Đáp án: D
+
+Tính: 2/7 × 3/4 + 1/2 = ...
+A) 13/14
+B) 6/28
+C) 10/14
+D) 5/7
+Đáp án: A
+
+#toan-lop4-chude13
+Kết quả của phép tính 3/4 + 1/2 là:
+A) 4/6
+B) 5/4
+C) 1 1/4
+D) 1 1/2
+Đáp án: B
+
+Phân số nào bằng 2/3?
+A) 4/6
+B) 5/6
+C) 6/9
+D) 8/12
+Đáp án: A, C, D
+
+25% của 80 là:
+A) 20
+B) 25
+C) 40
+D) 60
+Đáp án: A
+
+Kết quả của 5/6 - 1/3 là:
+A) 4/3
+B) 1/2
+C) 3/6
+D) 4/6
+Đáp án: B
+
+Phân số 9/12 rút gọn về dạng tối giản là:
+A) 3/4
+B) 2/3
+C) 1/2
+D) 4/5
+Đáp án: A
+
+Kết quả của 2/5 × 3/4 là:
+A) 6/20
+B) 5/9
+C) 3/10
+D) 8/15
+Đáp án: C
+
+Phân số nào lớn nhất: 1/2, 2/3, 3/4, 4/5
+A) 1/2
+B) 2/3
+C) 3/4
+D) 4/5
+Đáp án: D
+
+Kết quả của 3/7 : 2/5 là:
+A) 6/35
+B) 15/14
+C) 5/12
+D) 14/15
+Đáp án: B
+
+3/5 của 25 là:
+A) 5
+B) 10
+C) 15
+D) 20
+Đáp án: C
+
+Phân số nào nhỏ nhất: 3/8, 1/2, 5/6, 2/3
+A) 3/8
+B) 1/2
+C) 5/6
+D) 2/3
+Đáp án: A
+
+#tieng-viet
+1. Từ nào viết đúng chính tả?
+A) Giành giật
+B) Dành giật
+C) Rành giật
+D) Sành giật
+Đáp án: A
+
+2. Câu "Ôi, bông hoa đẹp quá!" thuộc kiểu câu gì?
+A) Câu kể
+B) Câu hỏi
+C) Câu cảm
+D) Câu khiến
+Đáp án: C
+
+3. Từ nào là từ láy?
+A) Xinh đẹp
+B) Xinh xắn
+C) Xinh tươi
+D) Xinh tốt
+Đáp án: B
+
+4. Từ "chân" trong câu "chân trời" là:
+A) Từ nhiều nghĩa
+B) Từ đồng âm
+C) Từ đồng nghĩa
+D) Từ trái nghĩa
+Đáp án: A
+
+5. Dấu phẩy trong câu "Lan học Toán, Tiếng Việt, Tiếng Anh" có tác dụng gì?
+A) Ngăn cách trạng ngữ
+B) Ngăn cách vế câu
+C) Ngăn cách thành phần cùng chức vụ
+D) Đánh dấu lời nói trực tiếp
+Đáp án: C
+
+6. Từ nào không cùng nhóm?
+A) Học tập
+B) Học hành
+C) Học lỏm
+D) Học hỏi
+Đáp án: C
+
+7. Câu nào là câu ghép?
+A) Trời mưa to.
+B) Vì trời mưa nên tôi nghỉ học.
+C) Mưa rơi tí tách.
+D) Ôi, mưa to quá!
+Đáp án: B
+
+8. Từ "ăn" trong câu "Con thuyền ăn gió" là:
+A) Từ nhiều nghĩa
+B) Từ đồng âm
+C) Từ đồng nghĩa
+D) Từ trái nghĩa
+Đáp án: A
+
+9. Tiếng "công" trong từ nào khác nghĩa nhất?
+A) Công nhân
+B) Công viên
+C) Công bằng
+D) Công cộng
+Đáp án: B
+
+10. Câu nào dùng sai dấu câu?
+A) Bạn có khỏe không?
+B) Tôi thích học Toán, Tiếng Việt.
+C) Mẹ ơi! Con về rồi.
+D) Hãy làm bài tập đi.
+Đáp án: B
+
+#tieng-anh
+1. What is the opposite of "happy"?
+A) Sad
+B) Angry
+C) Tired
+D) Hungry
+Đáp án: A
+
+2. Choose the correct sentence:
+A) She go to school
+B) She goes to school
+C) She going to school
+D) She is go to school
+Đáp án: B
+
+3. "Apple" is a:
+A) Animal
+B) Fruit
+C) Vegetable
+D) Color
+Đáp án: B
+
+4. What time is it when the clock shows 3:30?
+A) Three thirty
+B) Half past three
+C) Thirty-three
+D) Both A and B
+Đáp án: D
+
+5. The past tense of "go" is:
+A) Goed
+B) Went
+C) Gone
+D) Going
+Đáp án: B
+
+6. Which word is different?
+A) Cat
+B) Dog
+C) Book
+D) Fish
+Đáp án: C
+
+7. "How old are you?" means:
+A) Bạn tên gì?
+B) Bạn bao nhiêu tuổi?
+C) Bạn khỏe không?
+D) Bạn ở đâu?
+Đáp án: B
+
+8. Complete: "I ___ from Vietnam."
+A) am
+B) is
+C) are
+D) be
+Đáp án: A
+
+9. What color is the sky on a sunny day?
+A) Green
+B) Blue
+C) Red
+D) Black
+Đáp án: B
+
+10. "Pencil" is used for:
+A) Writing
+B) Eating
+C) Sleeping
+D) Running
+Đáp án: A
+
+#tin-hoc
+1. Phím nào dùng để viết hoa?
+A) Enter
+B) Shift
+C) Space
+D) Tab
+Đáp án: B
+
+2. Phần mềm nào dùng để tính toán?
+A) Word
+B) Excel
+C) Paint
+D) PowerPoint
+Đáp án: B
+
+3. Thiết bị nào dùng để in văn bản?
+A) Máy in
+B) Máy scan
+C) Bàn phím
+D) Chuột
+Đáp án: A
+
+4. Internet dùng để:
+A) Chơi game
+B) Tìm kiếm thông tin
+C) Gửi email
+D) Tất cả các đáp án trên
+Đáp án: D
+
+5. Tệp tin có phần mở rộng .docx là của:
+A) Excel
+B) Word
+C) PowerPoint
+D) Paint
+Đáp án: B
+
+6. Phím tắt Ctrl+C dùng để:
+A) Sao chép
+B) Cắt
+C) Dán
+D) Xóa
+Đáp án: A
+
+7. Thiết bị nào lưu trữ dữ liệu?
+A) USB
+B) Ổ cứng
+C) Thẻ nhớ
+D) Tất cả các đáp án trên
+Đáp án: D
+
+8. Phần mềm nào dùng để vẽ?
+A) Word
+B) Excel
+C) Paint
+D) PowerPoint
+Đáp án: C
+
+9. Khi máy tính bị treo, nên:
+A) Rút điện ngay
+B) Đợi một lúc
+C) Nhấn nút nguồn để tắt
+D) Gõ mạnh vào bàn phím
+Đáp án: B
+
+10. Trình duyệt web nào sau đây?
+A) Chrome
+B) Word
+C) Excel
+D) Paint
+Đáp án: A
+
+#khoa-hoc
+1. Cây xanh quang hợp cần khí gì?
+A) Oxy
+B) Nitơ
+C) Cacbonic
+D) Hydro
+Đáp án: C
+
+2. Hiện tượng nước bay hơi thành hơi nước gọi là:
+A) Ngưng tụ
+B) Bay hơi
+C) Đông đặc
+D) Nóng chảy
+Đáp án: B
+
+3. Bộ phận nào giúp cây hấp thụ nước?
+A) Lá
+B) Thân
+C) Rễ
+D) Hoa
+Đáp án: C
+
+4. Vật nào dẫn điện tốt?
+A) Nhựa
+B) Gỗ
+C) Kim loại
+D) Vải
+Đáp án: C
+
+5. Hiện tượng mặt trăng che khuất mặt trời gọi là:
+A) Nguyệt thực
+B) Nhật thực
+C) Sao chổi
+D) Thiên thạch
+Đáp án: B
+
+6. Quá trình thực vật thải ra khí oxy gọi là:
+A) Hô hấp
+B) Quang hợp
+C) Thoát hơi nước
+D) Vận chuyển nhựa
+Đáp án: B
+
+7. Vật nào sau đây là nguồn sáng?
+A) Mặt trăng
+B) Gương
+C) Mặt trời
+D) Tờ giấy trắng
+Đáp án: C
+
+8. Đơn vị đo lực là:
+A) Mét
+B) Lít
+C) Newton
+D) Kilogam
+Đáp án: C
+
+9. Chất nào sau đây không hòa tan trong nước?
+A) Muối
+B) Đường
+C) Cát
+D) Bột canh
+Đáp án: C
+
+10. Hiện tượng nước chuyển từ thể lỏng sang thể rắn gọi là:
+A) Bay hơi
+B) Ngưng tụ
+C) Đông đặc
+D) Nóng chảy
+Đáp án: C
+
+#lich-su-dia-ly
+1. Vua nào dựng nước Văn Lang?
+A) An Dương Vương
+B) Lê Lợi
+C) Hùng Vương
+D) Ngô Quyền
+Đáp án: C
+
+2. Trận Bạch Đằng do ai lãnh đạo?
+A) Trần Hưng Đạo
+B) Ngô Quyền
+C) Lê Lợi
+D) Quang Trung
+Đáp án: B
+
+3. Sông nào dài nhất Việt Nam?
+A) Sông Hồng
+B) Sông Đà
+C) Sông Mê Kông
+D) Sông Đồng Nai
+Đáp án: C
+
+4. Nhà Trần đánh thắng quân xâm lược nào?
+A) Tống
+B) Nguyên Mông
+C) Minh
+D) Thanh
+Đáp án: B
+
+5. Thành phố nào là thủ đô nước ta?
+A) TP.HCM
+B) Hà Nội
+C) Đà Nẵng
+D) Hải Phòng
+Đáp án: B
+
+6. Ngô Quyền đánh tan quân Nam Hán trên sông nào?
+A) Bạch Đằng
+B) Hồng
+C) Mê Kông
+D) Đà
+Đáp án: A
+
+7. Đồng bằng nào lớn nhất nước ta?
+A) Đồng bằng sông Hồng
+B) Đồng bằng sông Cửu Long
+C) Đồng bằng Thanh-Nghệ-Tĩnh
+D) Đồng bằng duyên hải miền Trung
+Đáp án: B
+
+8. Vua Lê Lợi lên ngôi năm nào?
+A) 938
+B) 1010
+C) 1428
+D) 1789
+Đáp án: C
+
+9. Dãy núi nào dài nhất nước ta?
+A) Hoàng Liên Sơn
+B) Trường Sơn
+C) Sông Gâm
+D) Đông Triều
+Đáp án: B
+
+10. Nước ta giáp với bao nhiêu nước trên đất liền?
+A) 2
+B) 3
+C) 4
+D) 5
+Đáp án: B
+
+#cong-nghe
+1. Công cụ nào dùng để đo chiều dài?
+A) Nhiệt kế
+B) Thước kẻ
+C) Cân đồng hồ
+D) Đồng hồ
+Đáp án: B
+
+2. Vật liệu nào dễ cháy nhất?
+A) Kim loại
+B) Gỗ
+C) Nhựa
+D) Giấy
+Đáp án: D
+
+3. Khi bị điện giật, cần làm gì đầu tiên?
+A) Kéo nạn nhân ra
+B) Ngắt nguồn điện
+C) Gọi cứu thương
+D) Đổ nước vào
+Đáp án: B
+
+4. Vật liệu nào cách điện tốt?
+A) Đồng
+B) Nhôm
+C) Nhựa
+D) Sắt
+Đáp án: C
+
+5. Khi trời nắng nóng, nên mặc quần áo màu gì?
+A) Đen
+B) Trắng
+C) Đỏ
+D) Xanh đậm
+Đáp án: B
+
+6. Thiết bị nào dùng để bảo vệ mắt khi hàn?
+A) Kính râm
+B) Kính bảo hộ
+C) Kính áp tròng
+D) Kính cận
+Đáp án: B
+
+7. Khi sử dụng dao, cần chú ý:
+A) Cầm phần lưỡi dao
+B) Cầm phần cán dao
+C) Ném dao đi
+D) Để dao lung tung
+Đáp án: B
+
+8. Vật liệu nào dùng làm cửa sổ?
+A) Gỗ
+B) Kim loại
+C) Kính
+D) Nhựa
+Đáp án: C
+
+9. Khi thấy mùi gas, cần:
+A) Bật quạt
+B) Bật đèn
+C) Mở cửa, tắt nguồn gas
+D) Đốt lửa kiểm tra
+Đáp án: C
+
+10. Đồ dùng nào tiêu thụ điện nhiều nhất?
+A) Bóng đèn LED
+B) Quạt điện
+C) Tủ lạnh
+D) Sạc điện thoại
+Đáp án: C
