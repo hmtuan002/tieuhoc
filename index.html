@@ -701,7 +701,9 @@ function handleQuizAnswer(answer) {
             currentQuiz.score++;
             themTinNhanVaoGiaoDien("bot", "Chính xác! 🎉");
         } else {
-            themTinNhanVaoGiaoDien("bot", `Sai rồi. Đáp án đúng là ${currentQuestion.answer}.`);
+            let explanation = `Sai rồi. Đáp án đúng là ${currentQuestion.answer}.\n`;
+            explanation += `Giải thích vì sao đáp án đúng là: ${currentQuestion.explanation || 'Câu này cần áp dụng kiến thức cơ bản trong chương trình tiểu học'}`;
+            themTinNhanVaoGiaoDien("bot", explanation);
         }
         
         // Chuyển sang câu hỏi tiếp theo
