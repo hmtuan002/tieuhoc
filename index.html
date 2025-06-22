@@ -624,32 +624,33 @@ loadMultipleChoiceData();
       // Hàm bổ sung: Chọn ngẫu nhiên 10 câu từ danh sách
 function getRandomQuestions(questions, count) {
     const shuffled = [...questions].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
+    if (shuffled.length >= count) return shuffled.slice(0, count);
+    
+    // Lặp lại câu hỏi nếu không đủ
+    const repeated = [];
+    while (repeated.length < count) {
+        repeated.push(...shuffled);
+    }
+    return repeated.slice(0, count);
 }
-
-// Sửa hàm startMultipleChoiceQuiz
-function startMultipleChoiceQuiz(subject) {
-    if (!multipleChoiceData[subject] || multipleChoiceData[subject].length === 0) {
-        themTinNhanVaoGiaoDien("bot", `Hiện không có bài tập trắc nghiệm nào cho môn ${subjectFilters[subject].name}.`);
+function startMultipleChoiceQuiz(subject, topicKey) {
+    if (!multipleChoiceData[topicKey] || multipleChoiceData[topicKey].length < 5) {
+        themTinNhanVaoGiaoDien("bot", `❌  Hiện chưa có đủ bài tập trắc nghiệm cho phần này `);
         return;
     }
 
-    // Lấy tất cả câu hỏi của môn học
-    const allQuestions = multipleChoiceData[subject];
+    // Lấy ngẫu nhiên 10 câu (lặp lại nếu cần)
+    const questions = getRandomQuestions(multipleChoiceData[topicKey], 10);
     
-    // Nếu môn Toán có >10 câu → chọn ngẫu nhiên 10 câu
-    const selectedQuestions = (subject === 'toan' && allQuestions.length > 10) 
-        ? getRandomQuestions(allQuestions, 10) 
-        : allQuestions;
-
     quizSubject = subject;
     currentQuiz = {
-        questions: selectedQuestions,
+        questions: questions,
         currentQuestionIndex: 0,
         userAnswers: [],
         score: 0
     };
     
+    themTinNhanVaoGiaoDien("bot", `📝 Bắt đầu bài trắc nghiệm 10 câu (thang điểm 10):`);
     showNextQuestion();
 }
 
@@ -671,26 +672,20 @@ function showNextQuestion() {
 }
 
 function finishQuiz() {
-    const totalQuestions = currentQuiz.questions.length;
-    const score = (currentQuiz.score / totalQuestions) * 10; // Tính điểm trên 10
+    const score = (currentQuiz.score / 10) * 10; // Luôn tính trên 10 câu
     
-    let resultMessage = `Kết quả bài trắc nghiệm môn ${subjectFilters[quizSubject].name}:\n`;
-    resultMessage += `Bạn đã trả lời đúng ${currentQuiz.score}/${totalQuestions} câu\n`;
-    resultMessage += `Điểm của bạn: ${score.toFixed(1)}/10\n\n`;
+    let resultMessage = `🏁 KẾT QUẢ (10/10 câu)\n`;
+    resultMessage += `✅ Đúng: ${currentQuiz.score} câu = ${score}/10 điểm\n\n`;
+    resultMessage += "📌 Các câu sai:\n";
     
-    // Hiển thị các câu sai và đáp án đúng
-    for (let i = 0; i < totalQuestions; i++) {
-        const userAnswer = currentQuiz.userAnswers[i];
-        const correctAnswer = currentQuiz.questions[i].answer;
-        
-        if (userAnswer !== correctAnswer) {
-            resultMessage += `Câu ${i + 1}: Bạn chọn ${userAnswer || '(bỏ trống)'}, đáp án đúng là ${correctAnswer}\n`;
+    currentQuiz.questions.forEach((q, i) => {
+        if (currentQuiz.userAnswers[i] !== q.answer) {
+            resultMessage += `Câu ${i+1}: Bạn chọn "${currentQuiz.userAnswers[i] || '❌'}" → Đáp án đúng: ${q.answer}\n`;
         }
-    }
+    });
     
     themTinNhanVaoGiaoDien("bot", resultMessage);
     currentQuiz = null;
-    quizSubject = '';
 }
 function handleQuizAnswer(answer) {
     const currentQuestion = currentQuiz.questions[currentQuiz.currentQuestionIndex];
@@ -716,7 +711,18 @@ function handleQuizAnswer(answer) {
         themTinNhanVaoGiaoDien("bot", "Vui lòng nhập đáp án là A, B, C hoặc D (ví dụ: A, B, ...)");
     }
 }
-
+function handleTopicRequest(message) {
+    const regex = /(toán|tiếng việt|khoa học)\s*lớp\s*(\d+)\s*chủ đề\s*(\d+)/i;
+    const match = message.match(regex);
+    
+    if (match) {
+        const subjectKey = convertSubjectToKey(match[1]);
+        const topicKey = `${subjectKey}-lop${match[2]}-chude${match[3]}`;
+        startMultipleChoiceQuiz(subjectKey, topicKey);
+        return true;
+    }
+    return false;
+}
         async function guiTinNhan() {
     const tinNhanNguoiDung = oNhapTinNhan.value.trim();
     if (!tinNhanNguoiDung) return;
