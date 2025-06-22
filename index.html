@@ -423,7 +423,10 @@
 
         let currentSubject = '';
         let homeworkData = {}; // Đối tượng để lưu trữ dữ liệu bài tập từ baitap.txt
-
+// Thêm vào phần khai báo biến
+let multipleChoiceData = {}; // Đối tượng lưu trữ dữ liệu trắc nghiệm
+let currentQuiz = null; // Lưu trữ bài trắc nghiệm hiện tại
+let quizSubject = ''; // Môn học của bài trắc nghiệm hiện tại
         // Định nghĩa các môn học và bộ lọc
         const subjectFilters = {
             "toan": {
@@ -470,7 +473,51 @@
         // Các cụm từ người dùng có thể dùng để yêu cầu bài tập
         const homeworkRequestPhrases = /(cho (tôi|em) bài tập|xin bài tập|gợi ý bài tập|bài tập về)/;
 
+async function loadMultipleChoiceData() {
+    try {
+        const response = await fetch('tracnghiem.txt');
+        if (!response.ok) {
+            throw new Error(`Lỗi HTTP! status: ${response.status}`);
+        }
+        const text = await response.text();
+        const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
 
+        let currentSection = '';
+        let currentQuestion = null;
+        
+        for (const line of lines) {
+            if (line.startsWith('#')) {
+                currentSection = line.substring(1);
+                multipleChoiceData[currentSection] = [];
+            } else if (line.match(/^\d+\./)) {
+                // Bắt đầu câu hỏi mới
+                if (currentQuestion) {
+                    multipleChoiceData[currentSection].push(currentQuestion);
+                }
+                currentQuestion = {
+                    question: line.substring(line.indexOf('.') + 1).trim(),
+                    options: [],
+                    answer: ''
+                };
+            } else if (line.match(/^[A-D]\)/)) {
+                // Thêm lựa chọn
+                currentQuestion.options.push(line.trim());
+            } else if (line.startsWith('Đáp án:')) {
+                // Thêm đáp án
+                currentQuestion.answer = line.substring('Đáp án:'.length).trim();
+            }
+        }
+        // Thêm câu hỏi cuối cùng
+        if (currentQuestion && currentSection) {
+            multipleChoiceData[currentSection].push(currentQuestion);
+        }
+        
+        console.log("Dữ liệu trắc nghiệm đã tải:", multipleChoiceData);
+    } catch (error) {
+        console.error("Không thể tải dữ liệu trắc nghiệm:", error);
+        multipleChoiceData = {};
+    }
+}
         // Hàm để tải và phân tích dữ liệu bài tập từ baitap.txt
         async function loadHomeworkData() {
             try {
@@ -509,7 +556,7 @@
 
         // Tải dữ liệu bài tập khi script bắt đầu
         loadHomeworkData();
-
+loadMultipleChoiceData();
 
         // Gán sự kiện cho các nút chọn môn học ở trang chủ
         subjectButtons.forEach(button => {
@@ -574,12 +621,104 @@
         /**
          * Xử lý gửi tin nhắn của người dùng và nhận phản hồi từ bot.
          */
-        async function guiTinNhan() {
-            const tinNhanNguoiDung = oNhapTinNhan.value.trim();
-            if (!tinNhanNguoiDung) return; // Không làm gì nếu tin nhắn rỗng
+         function startMultipleChoiceQuiz(subject) {
+    if (!multipleChoiceData[subject] || multipleChoiceData[subject].length === 0) {
+        themTinNhanVaoGiaoDien("bot", `Hiện không có bài tập trắc nghiệm nào cho môn ${subjectFilters[subject].name}.`);
+        return;
+    }
+    
+    quizSubject = subject;
+    currentQuiz = {
+        questions: [...multipleChoiceData[subject]], // Sao chép mảng câu hỏi
+        currentQuestionIndex: 0,
+        userAnswers: [],
+        score: 0
+    };
+    
+    showNextQuestion();
+}
 
-            themTinNhanVaoGiaoDien("nguoi-dung", tinNhanNguoiDung);
-            oNhapTinNhan.value = ''; // Xóa nội dung trong ô nhập liệu
+function showNextQuestion() {
+    if (currentQuiz.currentQuestionIndex >= currentQuiz.questions.length) {
+        // Kết thúc bài trắc nghiệm
+        finishQuiz();
+        return;
+    }
+    
+    const question = currentQuiz.questions[currentQuiz.currentQuestionIndex];
+    let message = `Câu ${currentQuiz.currentQuestionIndex + 1}: ${question.question}\n`;
+    question.options.forEach(option => {
+        message += `${option}\n`;
+    });
+    message += "\nHãy nhập đáp án của bạn (ví dụ: A, B, C hoặc D)";
+    
+    themTinNhanVaoGiaoDien("bot", message);
+}
+
+function finishQuiz() {
+    const totalQuestions = currentQuiz.questions.length;
+    const score = (currentQuiz.score / totalQuestions) * 10; // Tính điểm trên 10
+    
+    let resultMessage = `Kết quả bài trắc nghiệm môn ${subjectFilters[quizSubject].name}:\n`;
+    resultMessage += `Bạn đã trả lời đúng ${currentQuiz.score}/${totalQuestions} câu\n`;
+    resultMessage += `Điểm của bạn: ${score.toFixed(1)}/10\n\n`;
+    
+    // Hiển thị các câu sai và đáp án đúng
+    for (let i = 0; i < totalQuestions; i++) {
+        const userAnswer = currentQuiz.userAnswers[i];
+        const correctAnswer = currentQuiz.questions[i].answer;
+        
+        if (userAnswer !== correctAnswer) {
+            resultMessage += `Câu ${i + 1}: Bạn chọn ${userAnswer || '(bỏ trống)'}, đáp án đúng là ${correctAnswer}\n`;
+        }
+    }
+    
+    themTinNhanVaoGiaoDien("bot", resultMessage);
+    currentQuiz = null;
+    quizSubject = '';
+}
+function handleQuizAnswer(answer) {
+    const currentQuestion = currentQuiz.questions[currentQuiz.currentQuestionIndex];
+    const userAnswer = answer.trim().toUpperCase();
+    
+    // Kiểm tra đáp án
+    if (['A', 'B', 'C', 'D'].includes(userAnswer)) {
+        currentQuiz.userAnswers.push(userAnswer);
+        
+        if (userAnswer === currentQuestion.answer) {
+            currentQuiz.score++;
+            themTinNhanVaoGiaoDien("bot", "Chính xác! 🎉");
+        } else {
+            themTinNhanVaoGiaoDien("bot", `Sai rồi. Đáp án đúng là ${currentQuestion.answer}.`);
+        }
+        
+        // Chuyển sang câu hỏi tiếp theo
+        currentQuiz.currentQuestionIndex++;
+        setTimeout(() => showNextQuestion(), 1500);
+    } else {
+        themTinNhanVaoGiaoDien("bot", "Vui lòng nhập đáp án là A, B, C hoặc D (ví dụ: A, B, ...)");
+    }
+}
+
+        async function guiTinNhan() {
+    const tinNhanNguoiDung = oNhapTinNhan.value.trim();
+    if (!tinNhanNguoiDung) return;
+
+    themTinNhanVaoGiaoDien("nguoi-dung", tinNhanNguoiDung);
+    oNhapTinNhan.value = '';
+
+    // Xử lý nếu đang trong chế độ trắc nghiệm
+    if (currentQuiz) {
+        handleQuizAnswer(tinNhanNguoiDung);
+        return;
+    }
+
+    // Kiểm tra yêu cầu bài tập trắc nghiệm
+    const isAskingForMultipleChoice = /(bài tập trắc nghiệm|trắc nghiệm|bài tập TN)/i.test(tinNhanNguoiDung);
+    if (isAskingForMultipleChoice) {
+        startMultipleChoiceQuiz(currentSubject);
+        return;
+    }
 
             // Xử lý lời chào đơn giản
             const loiChao = ["chào", "hello", "hi"];
