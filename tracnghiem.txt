@@ -1,0 +1,496 @@
+#toan
+1. Kết quả của 15 × 4 là:
+A) 50
+B) 60
+C) 70
+D) 80
+Đáp án: B
+
+2. Số nào là ước của 24?
+A) 5
+B) 7
+C) 8
+D) 9
+Đáp án: C
+
+3. 3/5 của 25 là:
+A) 5
+B) 10
+C) 15
+D) 20
+Đáp án: C
+
+4. Hình nào có nhiều cạnh nhất?
+A) Tam giác
+B) Tứ giác
+C) Ngũ giác
+D) Lục giác
+Đáp án: D
+
+5. 2 giờ 30 phút = ... phút?
+A) 120
+B) 150
+C) 180
+D) 200
+Đáp án: B
+
+6. Giá trị chữ số 7 trong 3752 là:
+A) 7
+B) 70
+C) 700
+D) 7000
+Đáp án: C
+
+7. Kết quả 128 ÷ 8 là:
+A) 14
+B) 16
+C) 18
+D) 20
+Đáp án: B
+
+8. Chu vi hình vuông cạnh 5cm là:
+A) 10cm
+B) 15cm
+C) 20cm
+D) 25cm
+Đáp án: C
+
+9. Số góc vuông trong hình chữ nhật là:
+A) 1
+B) 2
+C) 3
+D) 4
+Đáp án: D
+
+10. 25% của 40 là:
+A) 5
+B) 10
+C) 15
+D) 20
+Đáp án: B
+
+#tieng-viet
+1. Từ nào viết đúng chính tả?
+A) Giành giật
+B) Dành giật
+C) Rành giật
+D) Sành giật
+Đáp án: A
+
+2. Câu "Ôi, bông hoa đẹp quá!" thuộc kiểu câu gì?
+A) Câu kể
+B) Câu hỏi
+C) Câu cảm
+D) Câu khiến
+Đáp án: C
+
+3. Từ nào là từ láy?
+A) Xinh đẹp
+B) Xinh xắn
+C) Xinh tươi
+D) Xinh tốt
+Đáp án: B
+
+4. Từ "chân" trong câu "chân trời" là:
+A) Từ nhiều nghĩa
+B) Từ đồng âm
+C) Từ đồng nghĩa
+D) Từ trái nghĩa
+Đáp án: A
+
+5. Dấu phẩy trong câu "Lan học Toán, Tiếng Việt, Tiếng Anh" có tác dụng gì?
+A) Ngăn cách trạng ngữ
+B) Ngăn cách vế câu
+C) Ngăn cách thành phần cùng chức vụ
+D) Đánh dấu lời nói trực tiếp
+Đáp án: C
+
+6. Từ nào không cùng nhóm?
+A) Học tập
+B) Học hành
+C) Học lỏm
+D) Học hỏi
+Đáp án: C
+
+7. Câu nào là câu ghép?
+A) Trời mưa to.
+B) Vì trời mưa nên tôi nghỉ học.
+C) Mưa rơi tí tách.
+D) Ôi, mưa to quá!
+Đáp án: B
+
+8. Từ "ăn" trong câu "Con thuyền ăn gió" là:
+A) Từ nhiều nghĩa
+B) Từ đồng âm
+C) Từ đồng nghĩa
+D) Từ trái nghĩa
+Đáp án: A
+
+9. Tiếng "công" trong từ nào khác nghĩa nhất?
+A) Công nhân
+B) Công viên
+C) Công bằng
+D) Công cộng
+Đáp án: B
+
+10. Câu nào dùng sai dấu câu?
+A) Bạn có khỏe không?
+B) Tôi thích học Toán, Tiếng Việt.
+C) Mẹ ơi! Con về rồi.
+D) Hãy làm bài tập đi.
+Đáp án: B
+
+#tieng-anh
+1. What is the opposite of "happy"?
+A) Sad
+B) Angry
+C) Tired
+D) Hungry
+Đáp án: A
+
+2. Choose the correct sentence:
+A) She go to school
+B) She goes to school
+C) She going to school
+D) She is go to school
+Đáp án: B
+
+3. "Apple" is a:
+A) Animal
+B) Fruit
+C) Vegetable
+D) Color
+Đáp án: B
+
+4. What time is it when the clock shows 3:30?
+A) Three thirty
+B) Half past three
+C) Thirty-three
+D) Both A and B
+Đáp án: D
+
+5. The past tense of "go" is:
+A) Goed
+B) Went
+C) Gone
+D) Going
+Đáp án: B
+
+6. Which word is different?
+A) Cat
+B) Dog
+C) Book
+D) Fish
+Đáp án: C
+
+7. "How old are you?" means:
+A) Bạn tên gì?
+B) Bạn bao nhiêu tuổi?
+C) Bạn khỏe không?
+D) Bạn ở đâu?
+Đáp án: B
+
+8. Complete: "I ___ from Vietnam."
+A) am
+B) is
+C) are
+D) be
+Đáp án: A
+
+9. What color is the sky on a sunny day?
+A) Green
+B) Blue
+C) Red
+D) Black
+Đáp án: B
+
+10. "Pencil" is used for:
+A) Writing
+B) Eating
+C) Sleeping
+D) Running
+Đáp án: A
+
+#tin-hoc
+1. Phím nào dùng để viết hoa?
+A) Enter
+B) Shift
+C) Space
+D) Tab
+Đáp án: B
+
+2. Phần mềm nào dùng để tính toán?
+A) Word
+B) Excel
+C) Paint
+D) PowerPoint
+Đáp án: B
+
+3. Thiết bị nào dùng để in văn bản?
+A) Máy in
+B) Máy scan
+C) Bàn phím
+D) Chuột
+Đáp án: A
+
+4. Internet dùng để:
+A) Chơi game
+B) Tìm kiếm thông tin
+C) Gửi email
+D) Tất cả các đáp án trên
+Đáp án: D
+
+5. Tệp tin có phần mở rộng .docx là của:
+A) Excel
+B) Word
+C) PowerPoint
+D) Paint
+Đáp án: B
+
+6. Phím tắt Ctrl+C dùng để:
+A) Sao chép
+B) Cắt
+C) Dán
+D) Xóa
+Đáp án: A
+
+7. Thiết bị nào lưu trữ dữ liệu?
+A) USB
+B) Ổ cứng
+C) Thẻ nhớ
+D) Tất cả các đáp án trên
+Đáp án: D
+
+8. Phần mềm nào dùng để vẽ?
+A) Word
+B) Excel
+C) Paint
+D) PowerPoint
+Đáp án: C
+
+9. Khi máy tính bị treo, nên:
+A) Rút điện ngay
+B) Đợi một lúc
+C) Nhấn nút nguồn để tắt
+D) Gõ mạnh vào bàn phím
+Đáp án: B
+
+10. Trình duyệt web nào sau đây?
+A) Chrome
+B) Word
+C) Excel
+D) Paint
+Đáp án: A
+
+#khoa-hoc
+1. Cây xanh quang hợp cần khí gì?
+A) Oxy
+B) Nitơ
+C) Cacbonic
+D) Hydro
+Đáp án: C
+
+2. Hiện tượng nước bay hơi thành hơi nước gọi là:
+A) Ngưng tụ
+B) Bay hơi
+C) Đông đặc
+D) Nóng chảy
+Đáp án: B
+
+3. Bộ phận nào giúp cây hấp thụ nước?
+A) Lá
+B) Thân
+C) Rễ
+D) Hoa
+Đáp án: C
+
+4. Vật nào dẫn điện tốt?
+A) Nhựa
+B) Gỗ
+C) Kim loại
+D) Vải
+Đáp án: C
+
+5. Hiện tượng mặt trăng che khuất mặt trời gọi là:
+A) Nguyệt thực
+B) Nhật thực
+C) Sao chổi
+D) Thiên thạch
+Đáp án: B
+
+6. Quá trình thực vật thải ra khí oxy gọi là:
+A) Hô hấp
+B) Quang hợp
+C) Thoát hơi nước
+D) Vận chuyển nhựa
+Đáp án: B
+
+7. Vật nào sau đây là nguồn sáng?
+A) Mặt trăng
+B) Gương
+C) Mặt trời
+D) Tờ giấy trắng
+Đáp án: C
+
+8. Đơn vị đo lực là:
+A) Mét
+B) Lít
+C) Newton
+D) Kilogam
+Đáp án: C
+
+9. Chất nào sau đây không hòa tan trong nước?
+A) Muối
+B) Đường
+C) Cát
+D) Bột canh
+Đáp án: C
+
+10. Hiện tượng nước chuyển từ thể lỏng sang thể rắn gọi là:
+A) Bay hơi
+B) Ngưng tụ
+C) Đông đặc
+D) Nóng chảy
+Đáp án: C
+
+#lich-su-dia-ly
+1. Vua nào dựng nước Văn Lang?
+A) An Dương Vương
+B) Lê Lợi
+C) Hùng Vương
+D) Ngô Quyền
+Đáp án: C
+
+2. Trận Bạch Đằng do ai lãnh đạo?
+A) Trần Hưng Đạo
+B) Ngô Quyền
+C) Lê Lợi
+D) Quang Trung
+Đáp án: B
+
+3. Sông nào dài nhất Việt Nam?
+A) Sông Hồng
+B) Sông Đà
+C) Sông Mê Kông
+D) Sông Đồng Nai
+Đáp án: C
+
+4. Nhà Trần đánh thắng quân xâm lược nào?
+A) Tống
+B) Nguyên Mông
+C) Minh
+D) Thanh
+Đáp án: B
+
+5. Thành phố nào là thủ đô nước ta?
+A) TP.HCM
+B) Hà Nội
+C) Đà Nẵng
+D) Hải Phòng
+Đáp án: B
+
+6. Ngô Quyền đánh tan quân Nam Hán trên sông nào?
+A) Bạch Đằng
+B) Hồng
+C) Mê Kông
+D) Đà
+Đáp án: A
+
+7. Đồng bằng nào lớn nhất nước ta?
+A) Đồng bằng sông Hồng
+B) Đồng bằng sông Cửu Long
+C) Đồng bằng Thanh-Nghệ-Tĩnh
+D) Đồng bằng duyên hải miền Trung
+Đáp án: B
+
+8. Vua Lê Lợi lên ngôi năm nào?
+A) 938
+B) 1010
+C) 1428
+D) 1789
+Đáp án: C
+
+9. Dãy núi nào dài nhất nước ta?
+A) Hoàng Liên Sơn
+B) Trường Sơn
+C) Sông Gâm
+D) Đông Triều
+Đáp án: B
+
+10. Nước ta giáp với bao nhiêu nước trên đất liền?
+A) 2
+B) 3
+C) 4
+D) 5
+Đáp án: B
+
+#cong-nghe
+1. Công cụ nào dùng để đo chiều dài?
+A) Nhiệt kế
+B) Thước kẻ
+C) Cân đồng hồ
+D) Đồng hồ
+Đáp án: B
+
+2. Vật liệu nào dễ cháy nhất?
+A) Kim loại
+B) Gỗ
+C) Nhựa
+D) Giấy
+Đáp án: D
+
+3. Khi bị điện giật, cần làm gì đầu tiên?
+A) Kéo nạn nhân ra
+B) Ngắt nguồn điện
+C) Gọi cứu thương
+D) Đổ nước vào
+Đáp án: B
+
+4. Vật liệu nào cách điện tốt?
+A) Đồng
+B) Nhôm
+C) Nhựa
+D) Sắt
+Đáp án: C
+
+5. Khi trời nắng nóng, nên mặc quần áo màu gì?
+A) Đen
+B) Trắng
+C) Đỏ
+D) Xanh đậm
+Đáp án: B
+
+6. Thiết bị nào dùng để bảo vệ mắt khi hàn?
+A) Kính râm
+B) Kính bảo hộ
+C) Kính áp tròng
+D) Kính cận
+Đáp án: B
+
+7. Khi sử dụng dao, cần chú ý:
+A) Cầm phần lưỡi dao
+B) Cầm phần cán dao
+C) Ném dao đi
+D) Để dao lung tung
+Đáp án: B
+
+8. Vật liệu nào dùng làm cửa sổ?
+A) Gỗ
+B) Kim loại
+C) Kính
+D) Nhựa
+Đáp án: C
+
+9. Khi thấy mùi gas, cần:
+A) Bật quạt
+B) Bật đèn
+C) Mở cửa, tắt nguồn gas
+D) Đốt lửa kiểm tra
+Đáp án: C
+
+10. Đồ dùng nào tiêu thụ điện nhiều nhất?
+A) Bóng đèn LED
+B) Quạt điện
+C) Tủ lạnh
+D) Sạc điện thoại
+Đáp án: C
