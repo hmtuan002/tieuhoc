@@ -322,6 +322,7 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            cursor: pointer;
         }
 
         /* Breadcrumb */
@@ -330,6 +331,16 @@
             padding: 10px 15px;
             border-radius: 5px;
             margin-bottom: 20px;
+        }
+
+        .breadcrumb-item a {
+            color: #007bff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .breadcrumb-item a:hover {
+            text-decoration: underline;
         }
 
         /* Style cho phân số */
@@ -428,7 +439,7 @@
     <!-- Grade Selection Screen -->
     <div id="gradeScreen">
         <h1>Chatbot học tập trường TH Thượng Ấm</h1>
-        <h3>Chọn lớp của bạn</h3>
+        <h3>Chọn lớp của em</h3>
         <div class="grade-buttons">
             <button class="grade-button" data-grade="lop1">
                 <i class="fas fa-user-graduate"></i>
@@ -455,7 +466,7 @@
 
     <!-- Subject Selection Screen -->
     <div id="subjectScreen">
-        <button class="btn btn-secondary back-button" onclick="backToGrades()">
+        <button class="btn btn-secondary back-button" onclick="window.backToGrades()">
             <i class="fas fa-arrow-left"></i> Quay lại chọn lớp
         </button>
         <h1 id="subjectScreenTitle">Chọn môn học</h1>
@@ -466,7 +477,7 @@
 
     <!-- Chapter Selection Screen -->
     <div id="chapterScreen">
-        <button class="btn btn-secondary back-button" onclick="backToSubjects()">
+        <button class="btn btn-secondary back-button" onclick="window.backToSubjects()">
             <i class="fas fa-arrow-left"></i> Quay lại môn học
         </button>
         <nav aria-label="breadcrumb" class="breadcrumb">
@@ -482,7 +493,7 @@
 
     <!-- Chatbot Screen -->
     <div id="chatbot-container">
-        <button class="btn btn-secondary back-button" onclick="backToChapters()">
+        <button class="btn btn-secondary back-button" onclick="window.backToChapters()">
             <i class="fas fa-arrow-left"></i> Quay lại chọn chương
         </button>
         <div class="chat-area">
@@ -518,7 +529,7 @@
             apiKey: "AIzaSyCyhGASygL5BVBB-0pJJNwoyTZ61pAzP7c",
             authDomain: "tieuhoc-a7f57.firebaseapp.com",
             projectId: "tieuhoc-a7f57",
-            storageBucket: "tieuhoc-a7f57.firebasestorage.app",
+            storageBucket: "tieuhoc-a7f57.appspot.com",
             messagingSenderId: "736631398515",
             appId: "1:736631398515:web:a41bbabeeb98c3df42ca06"
         };
@@ -568,11 +579,11 @@
 
         // Grade names
         const gradeNames = {
-            'lop1': 'Lớp 1',
-            'lop2': 'Lớp 2',
-            'lop3': 'Lớp 3',
-            'lop4': 'Lớp 4',
-            'lop5': 'Lớp 5'
+            'lop1': '1',
+            'lop2': '2',
+            'lop3': '3',
+            'lop4': '4',
+            'lop5': '5'
         };
 
         // Subject filters for AI responses
@@ -645,6 +656,11 @@
                 updateInputPreview();
                 adjustTextareaHeight();
             });
+
+            // Make functions available globally for button onclick events
+            window.backToGrades = backToGrades;
+            window.backToSubjects = backToSubjects;
+            window.backToChapters = backToChapters;
         }
 
         // Adjust textarea height based on content
@@ -827,7 +843,7 @@
             
             // Show welcome message
             khungTroChuyen.innerHTML = '';
-            themTinNhanVaoGiaoDien("bot", `Chào mừng bạn đến với chương "${chapterName}" của môn ${currentSubject}! Tôi có thể giúp gì cho bạn?`);
+            themTinNhanVaoGiaoDien("bot", `Chào mừng em đến với chương "${chapterName}" của môn ${currentSubject}! Tôi có thể giúp gì cho em?`);
         }
 
         // Back to chapter selection
@@ -879,7 +895,7 @@
             if (currentGrade) {
                 const gradeItem = document.createElement('li');
                 gradeItem.className = 'breadcrumb-item';
-                gradeItem.innerHTML = `<a href="#" onclick="backToGrades()">${gradeNames[currentGrade]}</a>`;
+                gradeItem.innerHTML = `<a href="#" onclick="window.backToGrades()">${gradeNames[currentGrade]}</a>`;
                 breadcrumb.appendChild(gradeItem);
             }
             
@@ -887,7 +903,7 @@
             if (currentSubject) {
                 const subjectItem = document.createElement('li');
                 subjectItem.className = 'breadcrumb-item';
-                subjectItem.innerHTML = `<a href="#" onclick="backToSubjects()">${currentSubject}</a>`;
+                subjectItem.innerHTML = `<a href="#" onclick="window.backToSubjects()">${currentSubject}</a>`;
                 breadcrumb.appendChild(subjectItem);
             }
             
@@ -960,7 +976,7 @@
             
             const question = currentQuiz.questions[currentQuiz.currentQuestionIndex];
             let message = `Câu ${currentQuiz.currentQuestionIndex + 1}: ${question.question}\n\n`;
-            message += "Hãy trả lời câu hỏi này (bạn có thể nhập câu trả lời của mình)";
+            message += "Hãy trả lời câu hỏi này (em có thể nhập câu trả lời của mình)";
             
             themTinNhanVaoGiaoDien("bot", message);
         }
@@ -971,9 +987,9 @@
             const score = (currentQuiz.score / totalQuestions) * 10; // Calculate score out of 10
             
             let resultMessage = `Kết thúc bài tập!\n`;
-            resultMessage += `Bạn đã hoàn thành ${totalQuestions} câu hỏi\n`;
+            resultMessage += `em đã hoàn thành ${totalQuestions} câu hỏi\n`;
             resultMessage += `Số câu đúng: ${currentQuiz.score}/${totalQuestions}\n`;
-            resultMessage += `Điểm của bạn: ${score.toFixed(1)}/10\n\n`;
+            resultMessage += `Điểm của em: ${score.toFixed(1)}/10\n\n`;
             
             themTinNhanVaoGiaoDien("bot", resultMessage);
             currentQuiz = null;
@@ -990,7 +1006,7 @@
             
             // For now, just count all answers as correct (since we don't have answer keys)
             currentQuiz.score++;
-            themTinNhanVaoGiaoDien("bot", "Cảm ơn câu trả lời của bạn!");
+            themTinNhanVaoGiaoDien("bot", "Cảm ơn câu trả lời của em!");
                 
             // Move to next question
             currentQuiz.currentQuestionIndex++;
@@ -1024,7 +1040,7 @@
             // Handle simple greetings
             const loiChao = ["chào", "hello", "hi"];
             if (loiChao.some(chao => tinNhanNguoiDung.toLowerCase().includes(chao))) {
-                themTinNhanVaoGiaoDien("bot", `Chào bạn! Tôi là một chatbot AI được thiết kế để trả lời các câu hỏi cấp tiểu học cho môn ${currentSubject}, chương "${currentChapterName}". Bạn có câu hỏi gì không?`);
+                themTinNhanVaoGiaoDien("bot", `Chào em! Tôi là một chatbot AI được thiết kế để trả lời các câu hỏi cấp tiểu học cho môn ${currentSubject}, chương "${currentChapterName}". em có câu hỏi gì không?`);
                 return;
             }
 
@@ -1036,9 +1052,9 @@
                 
                 if (currentExercises && currentExercises.length > 0) {
                     let examples = currentExercises.map((e, i) => `${i + 1}. ${e.question}`).join('\n');
-                    themTinNhanVaoGiaoDien("bot", `Dưới đây là một số bài tập trong chương "${currentChapterName}" môn ${currentSubject}:\n${examples}\n\nBạn hãy thử giải các bài tập này và hỏi tôi nếu có bất kỳ câu hỏi nào về cách làm nhé!`);
+                    themTinNhanVaoGiaoDien("bot", `Dưới đây là một số bài tập trong chương "${currentChapterName}" môn ${currentSubject}:\n${examples}\n\nem hãy thử giải các bài tập này và hỏi tôi nếu có bất kỳ câu hỏi nào về cách làm nhé!`);
                 } else {
-                    themTinNhanVaoGiaoDien("bot", `Hiện không có bài tập nào trong chương "${currentChapterName}" của môn ${currentSubject}. Bạn có thể hỏi tôi về cách làm một dạng bài tập nào đó, tôi sẽ hướng dẫn bạn!`);
+                    themTinNhanVaoGiaoDien("bot", `Hiện không có bài tập nào trong chương "${currentChapterName}" của môn ${currentSubject}. em có thể hỏi tôi về cách làm một dạng bài tập nào đó, tôi sẽ hướng dẫn em!`);
                 }
                 return;
             }
@@ -1046,7 +1062,7 @@
 
             // Check if question is appropriate for elementary level
             if (!laCauHoiTieuHoc(tinNhanNguoiDung)) {
-                themTinNhanVaoGiaoDien("bot", "Xin lỗi, tôi chỉ có thể giúp bạn với các câu hỏi và bài tập ở cấp độ tiểu học. Vui lòng hỏi những câu hỏi phù hợp hơn nhé.");
+                themTinNhanVaoGiaoDien("bot", "Xin lỗi, tôi chỉ có thể giúp em với các câu hỏi và bài tập ở cấp độ tiểu học. Vui lòng hỏi những câu hỏi phù hợp hơn nhé.");
                 return;
             }
 
@@ -1055,7 +1071,7 @@
                 const subjectKey = currentSubject.toLowerCase().replace(/ /g, '-').replace(/&/g, '-');
                 const subjectName = subjectFilters[subjectKey]?.name || currentSubject;
                 
-                const loiNhac = `Bạn là một giáo viên AI thân thiện và hữu ích (lưu ý xưng hô với người dùng là thầy - em), chuyên giải đáp các câu hỏi và gợi ý cách làm bài tập cho học sinh tiểu học trong môn ${subjectName}, chương "${currentChapterName}". Hãy trả lời một cách đơn giản, dễ hiểu, và chỉ tập trung vào kiến thức cấp tiểu học. Tuyệt đối không giải bài tập cụ thể, chỉ gợi ý phương pháp hoặc hướng dẫn. Nếu câu hỏi không phù hợp cấp tiểu học hoặc yêu cầu giải bài tập chi tiết, hãy từ chối một cách nhẹ nhàng và lịch sự. Nếu người dùng xin bài tập để làm thì cũng có thể được.
+                const loiNhac = `em là một giáo viên AI thân thiện và hữu ích (lưu ý xưng hô với người dùng là thầy - em), chuyên giải đáp các câu hỏi và gợi ý cách làm bài tập cho học sinh tiểu học trong môn ${subjectName}, chương "${currentChapterName}". Hãy trả lời một cách đơn giản, dễ hiểu, và chỉ tập trung vào kiến thức cấp tiểu học. Tuyệt đối không giải bài tập cụ thể, chỉ gợi ý phương pháp hoặc hướng dẫn. Nếu câu hỏi không phù hợp cấp tiểu học hoặc yêu cầu giải bài tập chi tiết, hãy từ chối một cách nhẹ nhàng và lịch sự. Nếu người dùng xin bài tập để làm thì cũng có thể được.
                 \n\nCâu hỏi: ${tinNhanNguoiDung}`;
 
                 const ketQua = await moHinh.generateContent(loiNhac);
