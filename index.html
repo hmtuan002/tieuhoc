@@ -1,16 +1,13 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot học tập trường TH Thượng Ấm</title>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
+    <title>CHATBOT HỌC TẬP CHO HỌC SINH TIỂU HỌC</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap');
 
@@ -19,87 +16,48 @@
             margin: 0;
             display: flex;
             flex-direction: column;
-            height: 100vh;
-            background-color: #e0f7fa;
+            min-height: 100vh;
             color: #333;
-            overflow: hidden;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        /* Grade Selection Screen */
-        #gradeScreen {
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://bvhttdl.mediacdn.vn/291773308735864832/2024/12/2/0211ditichtantrao1-1733104546432-1733104546771617645710.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: blur(5px);
+            z-index: -1;
+        }
+
+        #home-menu {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            flex-grow: 1;
             padding: 20px;
             text-align: center;
-            background-color: #ffffff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border-radius: 10px;
             margin: 20px;
+            flex-grow: 1;
         }
 
-        #gradeScreen h1 {
+        #home-menu h1 {
             color: #26a69a;
             margin-bottom: 30px;
             font-size: 2.5em;
-        }
-
-        .grade-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            width: 80%;
-            max-width: 900px;
-        }
-
-        .grade-button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 20px;
-            font-size: 1.2em;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-        .grade-button i {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-
-        .grade-button:hover {
-            background-color: #45a049;
-            transform: translateY(-3px);
-        }
-
-        /* Subject Selection Screen */
-        #subjectScreen {
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            flex-grow: 1;
-            padding: 20px;
-            text-align: center;
-            background-color: #ffffff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border-radius: 10px;
-            margin: 20px;
-        }
-
-        #subjectScreen h1 {
-            color: #26a69a;
-            margin-bottom: 30px;
-            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid rgba(76, 175, 80, 0.3);
         }
 
         .subject-buttons {
@@ -108,10 +66,11 @@
             gap: 20px;
             width: 80%;
             max-width: 900px;
+            margin-bottom: 40px;
         }
 
         .subject-button {
-            background-color: #2196F3;
+            background-color: rgba(76, 175, 80, 0.85);
             color: white;
             border: none;
             border-radius: 10px;
@@ -119,73 +78,167 @@
             font-size: 1.2em;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .subject-button i {
             font-size: 2.5em;
             margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
 
         .subject-button:hover {
-            background-color: #1976D2;
-            transform: translateY(-3px);
+            background-color: rgba(69, 160, 73, 0.95);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
         }
 
-        /* Chapter Selection Screen */
-        #chapterScreen {
-            display: none;
-            flex-direction: column;
-            flex-grow: 1;
-            padding: 20px;
-            background-color: #ffffff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border-radius: 10px;
-            margin: 20px;
-        }
-
-        .chapter-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
+        #contact-info {
             margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 80%;
+            max-width: 900px;
+            border: 2px solid rgba(38, 166, 154, 0.3);
+            text-align: center;
         }
 
-        .chapter-card {
-            background-color: #f5f5f5;
-            border-radius: 8px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-left: 4px solid #4CAF50;
-        }
-
-        .chapter-card:hover {
-            background-color: #e8f5e9;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .chapter-card h3 {
+        #contact-info h3 {
+            color: #26a69a;
             margin-top: 0;
-            color: #2E7D32;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
-        /* Chatbot Screen */
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            color: #333;
+            flex-wrap: wrap;
+        }
+
+        .contact-item i {
+            color: #4CAF50;
+            margin-right: 10px;
+            font-size: 1.2em;
+            width: 24px;
+            text-align: center;
+        }
+
+        .contact-name {
+            font-weight: 600;
+            color: #2c7873;
+            margin-right: 8px;
+        }
+
+        .contact-divider {
+            margin: 0 15px;
+            color: #ccc;
+        }
+
+        footer {
+            background-color: rgba(38, 166, 154, 0.95);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            width: 100%;
+            margin-top: auto;
+            border-top: 3px solid #2c7873;
+            backdrop-filter: blur(10px);
+        }
+
+        .footer-line {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #ffffff, transparent);
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-content p {
+            margin: 5px 0;
+            font-size: 1em;
+        }
+
+        .footer-content i {
+            margin-right: 8px;
+            color: #c5e1a5;
+        }
+
         #chatbot-container {
             display: none;
-            flex-grow: 1;
-            flex-direction: column;
+            flex-direction: row;
             overflow: hidden;
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.95);
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             border-radius: 10px;
             margin: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        #sidebar {
+            width: 200px;
+            background-color: rgba(240, 244, 195, 0.9);
+            padding: 15px;
+            border-right: 1px solid #dce775;
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset -2px 0 5px rgba(0,0,0,0.05);
+            overflow-y: auto;
+        }
+
+        #sidebar h3 {
+            color: #689f38;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .sidebar-button {
+            background-color: #c5e1a5;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 10px;
+            margin-bottom: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar-button i {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .sidebar-button.active, .sidebar-button:hover {
+            background-color: #8bc34a;
+            color: white;
+            transform: translateX(3px);
         }
 
         .chat-area {
@@ -200,7 +253,7 @@
             overflow-y: auto;
             padding: 15px;
             border-bottom: 1px solid #b2ebf2;
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.8);
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
             display: flex;
             flex-direction: column;
@@ -217,7 +270,7 @@
         }
 
         .tin-nhan-nguoi-dung {
-            background-color: #007bff;
+            background-color: rgba(0, 123, 255, 0.9);
             color: white;
             margin-left: auto;
             text-align: right;
@@ -225,7 +278,7 @@
         }
 
         .tin-nhan-bot {
-            background-color: #e3f2fd;
+            background-color: rgba(227, 242, 253, 0.9);
             color: #212121;
             margin-right: auto;
             text-align: left;
@@ -236,7 +289,7 @@
         #khu-vuc-nhap {
             display: flex;
             padding: 15px;
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.9);
             border-top: 1px solid #e0e0e0;
             box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
             align-items: center;
@@ -252,9 +305,9 @@
             width: 100%;
             background: transparent;
             position: relative;
-            z-index: 2;
+            z-index: 1;
             color: transparent;
-            caret-color: #333;
+            caret-color: black;
             padding: 12px 18px;
             border: 1px solid #c5e1a5;
             border-radius: 25px;
@@ -264,6 +317,7 @@
             min-height: 48px;
             resize: none;
             overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.8);
         }
 
         #o-nhap-tin-nhan:focus {
@@ -279,10 +333,10 @@
             min-height: 48px;
             padding: 12px 18px;
             pointer-events: none;
-            z-index: 1;
+            z-index: 2;
             white-space: pre-wrap;
             overflow: hidden;
-            color: #333;
+            color: black;
             border: 1px solid transparent;
             border-radius: 25px;
             font-size: 16px;
@@ -315,35 +369,6 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
-        /* Navigation buttons */
-        .back-button {
-            margin-bottom: 20px;
-            align-self: flex-start;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-        }
-
-        /* Breadcrumb */
-        .breadcrumb {
-            background-color: #f8f9fa;
-            padding: 10px 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-
-        .breadcrumb-item a {
-            color: #007bff;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .breadcrumb-item a:hover {
-            text-decoration: underline;
-        }
-
-        /* Style cho phân số */
         .fraction {
             display: inline-block;
             text-align: center;
@@ -364,7 +389,6 @@
             padding: 0 3px;
         }
 
-        /* Style cho hỗn số */
         .mixed-number {
             display: inline-flex;
             align-items: center;
@@ -380,26 +404,121 @@
             display: inline-block;
         }
 
+        #visit-counter {
+            position: fixed;
+            bottom: 80px;
+            right: 10px;
+            background-color: rgba(38, 166, 154, 0.9);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
         @media (max-width: 768px) {
-            .grade-buttons, .subject-buttons {
+            #home-menu h1 {
+                font-size: 1.8em;
+                margin-bottom: 20px;
+                padding: 15px 25px;
+            }
+
+            .subject-buttons {
                 grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
                 gap: 15px;
                 width: 95%;
             }
 
-            .grade-button, .subject-button {
+            .subject-button {
                 padding: 15px;
                 font-size: 1em;
+                background-color: rgba(76, 175, 80, 0.85);
             }
 
-            .grade-button i, .subject-button i {
+            .subject-button i {
                 font-size: 2em;
                 margin-bottom: 8px;
             }
 
+            #contact-info {
+                width: 95%;
+                margin-top: 20px;
+                padding: 15px;
+            }
+            
+            #contact-info h3 {
+                font-size: 1.3em;
+            }
+            
+            .contact-item {
+                font-size: 1em;
+                flex-direction: column;
+                text-align: center;
+                margin-bottom: 15px;
+            }
+            
+            .contact-item i {
+                margin-right: 0;
+                margin-bottom: 5px;
+                font-size: 1.1em;
+            }
+            
+            .contact-divider {
+                display: none;
+            }
+            
+            .contact-detail {
+                display: block;
+                margin: 3px 0;
+            }
+
+            footer {
+                padding: 15px 0;
+            }
+
+            .footer-content p {
+                font-size: 0.9em;
+            }
+
             #chatbot-container {
+                flex-direction: column;
                 margin: 10px;
                 border-radius: 8px;
+            }
+
+            #sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #dce775;
+                padding: 10px;
+                box-shadow: inset 0 -2px 5px rgba(0,0,0,0.05);
+                flex-direction: row;
+                overflow-x: auto;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            #sidebar h3 {
+                display: none;
+            }
+
+            .sidebar-button {
+                flex-shrink: 0;
+                width: auto;
+                margin-bottom: 0;
+                margin-right: 10px;
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+
+            .sidebar-button i {
+                font-size: 1em;
+                margin-right: 5px;
             }
 
             .chat-area {
@@ -420,6 +539,10 @@
                 padding: 10px;
             }
 
+            #o-nhap-tin-nhan-container {
+                min-height: 40px;
+            }
+
             #o-nhap-tin-nhan, #o-nhap-tin-nhan-preview {
                 padding: 10px 15px;
                 font-size: 14px;
@@ -432,70 +555,106 @@
                 font-size: 20px;
                 margin-left: 10px;
             }
+
+            #visit-counter {
+                bottom: 70px;
+                right: 5px;
+                padding: 6px 12px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Grade Selection Screen -->
-    <div id="gradeScreen">
+    <div id="visit-counter">
+        <i class="fas fa-eye"></i> <span id="visit-count">0</span> lượt truy cập
+    </div>
+
+    <div id="home-menu">
         <h1>Chatbot học tập trường TH Thượng Ấm</h1>
-        <h3>Chọn lớp của em</h3>
-        <div class="grade-buttons">
-            <button class="grade-button" data-grade="lop1">
-                <i class="fas fa-user-graduate"></i>
-                Lớp 1
+        <div class="subject-buttons">
+            <button class="subject-button" data-subject="toan">
+                <i class="fas fa-calculator"></i>
+                Toán
             </button>
-            <button class="grade-button" data-grade="lop2">
-                <i class="fas fa-user-graduate"></i>
-                Lớp 2
+            <button class="subject-button" data-subject="tieng-viet">
+                <i class="fas fa-book-open"></i>
+                Tiếng Việt
             </button>
-            <button class="grade-button" data-grade="lop3">
-                <i class="fas fa-user-graduate"></i>
-                Lớp 3
+            <button class="subject-button" data-subject="tieng-anh">
+                <i class="fas fa-globe"></i>
+                Tiếng Anh
             </button>
-            <button class="grade-button" data-grade="lop4">
-                <i class="fas fa-user-graduate"></i>
-                Lớp 4
+            <button class="subject-button" data-subject="tin-hoc">
+                <i class="fas fa-laptop-code"></i>
+                Tin Học
             </button>
-            <button class="grade-button" data-grade="lop5">
-                <i class="fas fa-user-graduate"></i>
-                Lớp 5
+            <button class="subject-button" data-subject="cong-nghe">
+                <i class="fas fa-tools"></i>
+                Công Nghệ
             </button>
+            <button class="subject-button" data-subject="lich-su-dia-ly">
+                <i class="fas fa-map-marked-alt"></i>
+                Lịch Sử & Địa Lý
+            </button>
+            <button class="subject-button" data-subject="khoa-hoc">
+                <i class="fas fa-flask"></i>
+                Khoa Học
+            </button>
+        </div>
+        
+        <div id="contact-info">
+            <h3><i class="fas fa-address-card"></i> Thông tin liên hệ</h3>
+            <div class="contact-item">
+                <i class="fas fa-user-graduate"></i>
+                <span class="contact-name">Nguyễn Đình Duy</span>
+                <span class="contact-divider">|</span>
+                <span class="contact-detail">
+                    <i class="fas fa-phone-alt"></i> SĐT: 0865328988
+                </span>
+                <span class="contact-divider">|</span>
+                <span class="contact-detail">
+                    <i class="fas fa-envelope"></i> Email: ndduy100592@tuyenquang.edu.vn
+                </span>
+            </div>
+            <p style="margin-top: 10px; font-size: 0.9em; color: #666; font-style: italic;">
+                <i class="fas fa-info-circle"></i> Thông tin này sẽ ẩn khi bạn vào chế độ học
+            </p>
         </div>
     </div>
 
-    <!-- Subject Selection Screen -->
-    <div id="subjectScreen">
-        <button class="btn btn-secondary back-button" onclick="window.backToGrades()">
-            <i class="fas fa-arrow-left"></i> Quay lại chọn lớp
-        </button>
-        <h1 id="subjectScreenTitle">Chọn môn học</h1>
-        <div class="subject-buttons" id="subjectButtonsContainer">
-            <!-- Subjects will be loaded here dynamically -->
-        </div>
-    </div>
-
-    <!-- Chapter Selection Screen -->
-    <div id="chapterScreen">
-        <button class="btn btn-secondary back-button" onclick="window.backToSubjects()">
-            <i class="fas fa-arrow-left"></i> Quay lại môn học
-        </button>
-        <nav aria-label="breadcrumb" class="breadcrumb">
-            <ol class="breadcrumb" id="breadcrumb">
-                <!-- Breadcrumb will be loaded here dynamically -->
-            </ol>
-        </nav>
-        <h2 id="chapterScreenTitle">Chọn chương</h2>
-        <div class="chapter-list" id="chapterList">
-            <!-- Chapters will be loaded here dynamically -->
-        </div>
-    </div>
-
-    <!-- Chatbot Screen -->
     <div id="chatbot-container">
-        <button class="btn btn-secondary back-button" onclick="window.backToChapters()">
-            <i class="fas fa-arrow-left"></i> Quay lại chọn chương
-        </button>
+        <div id="sidebar">
+            <h3>Môn học</h3>
+            <button class="sidebar-button" data-subject="toan">
+                <i class="fas fa-calculator"></i>
+                Toán
+            </button>
+            <button class="sidebar-button" data-subject="tieng-viet">
+                <i class="fas fa-book-open"></i>
+                Tiếng Việt
+            </button>
+            <button class="sidebar-button" data-subject="tieng-anh">
+                <i class="fas fa-globe"></i>
+                Tiếng Anh
+            </button>
+            <button class="sidebar-button" data-subject="tin-hoc">
+                <i class="fas fa-laptop-code"></i>
+                Tin Học
+            </button>
+            <button class="sidebar-button" data-subject="cong-nghe">
+                <i class="fas fa-tools"></i>
+                Công Nghệ
+            </button>
+            <button class="sidebar-button" data-subject="lich-su-dia-ly">
+                <i class="fas fa-map-marked-alt"></i>
+                Lịch Sử & Địa Lý
+            </button>
+            <button class="sidebar-button" data-subject="khoa-hoc">
+                <i class="fas fa-flask"></i>
+                Khoa Học
+            </button>
+        </div>
         <div class="chat-area">
             <div id="khung-tro-chuyen">
             </div>
@@ -511,9 +670,13 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    
+    <footer>
+        <div class="footer-line"></div>
+        <div class="footer-content">
+            <p><i class="fas fa-tree"></i> Ảnh cây đa Tân Trào (nguồn: sưu tầm Internet)</p>
+        </div>
+    </footer>
+
     <script type="importmap">
         {
             "imports": {
@@ -524,7 +687,6 @@
     <script type="module">
         import { GoogleGenerativeAI } from "@google/generative-ai";
 
-        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCyhGASygL5BVBB-0pJJNwoyTZ61pAzP7c",
             authDomain: "tieuhoc-a7f57.firebaseapp.com",
@@ -534,59 +696,28 @@
             appId: "1:736631398515:web:a41bbabeeb98c3df42ca06"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Gemini AI configuration
-        const KHOA_API = "AIzaSyAn9dMMM5u8dEGpI8mEzQvdMSuI8KFH8jM"; 
+        const KHOA_API = "AIzaSyD5xoXaqEGnRELeY74rQdnYLYiw-C-zMqE"; 
         const moHinhAI = new GoogleGenerativeAI(KHOA_API);
-        const moHinh = moHinhAI.getGenerativeModel({ model: "gemini-2.0-flash-thinking-exp-01-21" });
+        const moHinh = moHinhAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-        // DOM elements
-        const gradeScreen = document.getElementById('gradeScreen');
-        const subjectScreen = document.getElementById('subjectScreen');
-        const chapterScreen = document.getElementById('chapterScreen');
+        const homeMenu = document.getElementById('home-menu');
         const chatbotContainer = document.getElementById('chatbot-container');
         const khungTroChuyen = document.getElementById('khung-tro-chuyen');
         const oNhapTinNhan = document.getElementById('o-nhap-tin-nhan');
         const oNhapTinNhanPreview = document.getElementById('o-nhap-tin-nhan-preview');
         const nutGui = document.getElementById('nut-gui');
-        const subjectButtonsContainer = document.getElementById('subjectButtonsContainer');
-        const chapterList = document.getElementById('chapterList');
-        const breadcrumb = document.getElementById('breadcrumb');
-        const subjectScreenTitle = document.getElementById('subjectScreenTitle');
-        const chapterScreenTitle = document.getElementById('chapterScreenTitle');
-        const gradeButtons = document.querySelectorAll('.grade-button');
+        const subjectButtons = document.querySelectorAll('.subject-button');
+        const sidebarButtons = document.querySelectorAll('.sidebar-button');
+        const visitCounter = document.getElementById('visit-counter');
+        const visitCountSpan = document.getElementById('visit-count');
 
-        // Global variables
-        let currentGrade = '';
         let currentSubject = '';
-        let currentChapterId = '';
-        let currentChapterName = '';
-        let currentExercises = [];
-        let currentQuiz = null;
-        let quizSubject = '';
+        let homeworkData = {};
+        let totalVisits = 0;
 
-        // Subjects by grade
-        const subjectsByGrade = {
-            'lop1': ['Toán', 'Tiếng Việt', 'Tự nhiên và Xã hội'],
-            'lop2': ['Toán', 'Tiếng Việt', 'Tự nhiên và Xã hội'],
-            'lop3': ['Toán', 'Tiếng Việt', 'Tự nhiên và Xã hội', 'Tiếng Anh'],
-            'lop4': ['Toán', 'Tiếng Việt', 'Khoa học', 'Lịch sử & Địa lý', 'Tiếng Anh'],
-            'lop5': ['Toán', 'Tiếng Việt', 'Khoa học', 'Lịch sử & Địa lý', 'Tiếng Anh']
-        };
-
-        // Grade names
-        const gradeNames = {
-            'lop1': '1',
-            'lop2': '2',
-            'lop3': '3',
-            'lop4': '4',
-            'lop5': '5'
-        };
-
-        // Subject filters for AI responses
         const subjectFilters = {
             "toan": {
                 name: "Toán",
@@ -630,20 +761,79 @@
             "kinh tế vĩ mô", "chính trị quốc tế", "chứng minh", "phản biện", "tôn giáo", "đức tin"
         ];
         
-        // Homework request phrases
         const homeworkRequestPhrases = /(cho (tôi|em) bài tập|xin bài tập|gợi ý bài tập|bài tập về)/;
 
-        // Initialize the app
+        async function trackVisit() {
+            try {
+                const visitData = {
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    userAgent: navigator.userAgent,
+                    screenResolution: `${window.screen.width}x${window.screen.height}`,
+                    language: navigator.language,
+                    platform: navigator.platform
+                };
+                
+                // Thêm lượt truy cập mới
+                await db.collection('visits').add(visitData);
+                
+            } catch (error) {
+                console.error("Lỗi khi lưu lượt truy cập:", error);
+            }
+        }
+
+        async function getTotalVisits() {
+            try {
+                const visitsSnapshot = await db.collection('visits').get();
+                totalVisits = visitsSnapshot.size;
+                visitCountSpan.textContent = totalVisits.toLocaleString();
+                visitCounter.style.display = 'block';
+            } catch (error) {
+                console.error("Lỗi khi lấy số lượt truy cập:", error);
+            }
+        }
+
+        async function loadHomeworkData() {
+            try {
+                const response = await fetch('baitap.txt');
+                if (!response.ok) {
+                    throw new Error(`Lỗi HTTP! status: ${response.status}`);
+                }
+                const text = await response.text();
+                const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+
+                let currentSection = '';
+                for (const line of lines) {
+                    if (line.startsWith('#')) {
+                        currentSection = line.substring(1);
+                        homeworkData[currentSection] = [];
+                    } else if (currentSection && homeworkData[currentSection]) {
+                        homeworkData[currentSection].push(line);
+                    }
+                }
+                
+                for (const subjectKey in homeworkData) {
+                    if (subjectFilters[subjectKey]) {
+                        subjectFilters[subjectKey].homeworkExamples = homeworkData[subjectKey];
+                    }
+                }
+            } catch (error) {
+                for (const key in subjectFilters) {
+                    subjectFilters[key].homeworkExamples = [];
+                }
+            }
+        }
+
         function initApp() {
-            // Add event listeners to grade buttons
-            gradeButtons.forEach(button => {
-                button.addEventListener('click', () => selectGrade(button.dataset.grade));
+            subjectButtons.forEach(button => {
+                button.addEventListener('click', () => selectSubject(button.dataset.subject));
             });
 
-            // Add event listener to send button
+            sidebarButtons.forEach(button => {
+                button.addEventListener('click', () => selectSubject(button.dataset.subject));
+            });
+
             nutGui.addEventListener('click', guiTinNhan);
             
-            // Add event listener for Enter key in message input
             oNhapTinNhan.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -651,32 +841,30 @@
                 }
             });
 
-            // Update input preview when typing
             oNhapTinNhan.addEventListener('input', function() {
                 updateInputPreview();
                 adjustTextareaHeight();
             });
 
-            // Make functions available globally for button onclick events
-            window.backToGrades = backToGrades;
-            window.backToSubjects = backToSubjects;
-            window.backToChapters = backToChapters;
+            // Theo dõi lượt truy cập khi trang được tải
+            trackVisit();
+            getTotalVisits();
+            
+            // Cập nhật số lượt truy cập mỗi 30 giây
+            setInterval(getTotalVisits, 30000);
         }
 
-        // Adjust textarea height based on content
         function adjustTextareaHeight() {
             oNhapTinNhan.style.height = 'auto';
             oNhapTinNhan.style.height = (oNhapTinNhan.scrollHeight) + 'px';
             oNhapTinNhanPreview.style.height = oNhapTinNhan.style.height;
         }
 
-        // Update input preview
         function updateInputPreview() {
             const text = oNhapTinNhan.value;
             oNhapTinNhanPreview.innerHTML = formatFractionsAndMixedNumbers(escapeHtml(text));
         }
 
-        // Escape HTML to prevent XSS
         function escapeHtml(unsafe) {
             return unsafe
                 .replace(/&/g, "&amp;")
@@ -686,18 +874,14 @@
                 .replace(/'/g, "&#039;");
         }
 
-        // Format fractions and mixed numbers in text
         function formatFractionsAndMixedNumbers(text) {
-            // Process mixed numbers first: format number(fraction) or number (fraction)
             const mixedNumberRegex = /(\d+)(?:\s|)(\()(\d+)\/(\d+)(\))/g;
             let processedText = text.replace(mixedNumberRegex, (match, whole, p1, numerator, denominator, p2) => {
                 return `<span class="mixed-number"><span class="whole-part">${whole}</span><span class="fraction"><span class="numerator">${numerator}</span><span class="denominator">${denominator}</span></span></span>`;
             });
             
-            // Process simple fractions: number/number
             const fractionRegex = /([^\/\s]+)\/([^\/\s]+)/g;
             processedText = processedText.replace(fractionRegex, (match, numerator, denominator) => {
-                // Check if it's already processed as mixed number
                 if (processedText.includes(`<span class="mixed-number"><span class="whole-part">`)) {
                     return match;
                 }
@@ -707,313 +891,35 @@
             return processedText;
         }
 
-        // Select grade
-        function selectGrade(grade) {
-            currentGrade = grade;
-            gradeScreen.style.display = 'none';
-            subjectScreen.style.display = 'flex';
-            
-            // Update breadcrumb
-            updateBreadcrumb();
-            
-            // Load subjects for the selected grade
-            loadSubjects();
-        }
-
-        // Back to grade selection
-        function backToGrades() {
-            currentGrade = '';
-            currentSubject = '';
-            currentChapterId = '';
-            currentChapterName = '';
-            
-            gradeScreen.style.display = 'flex';
-            subjectScreen.style.display = 'none';
-            chapterScreen.style.display = 'none';
-            chatbotContainer.style.display = 'none';
-            
-            // Clear breadcrumb
-            breadcrumb.innerHTML = '';
-        }
-
-        // Load subjects for the selected grade
-        function loadSubjects() {
-            subjectButtonsContainer.innerHTML = '';
-            const subjects = subjectsByGrade[currentGrade];
-            
-            subjects.forEach(subject => {
-                const button = document.createElement('button');
-                button.className = 'subject-button';
-                button.dataset.subject = subject.toLowerCase().replace(/ /g, '-').replace(/&/g, '-');
-                
-                // Set icon based on subject
-                let iconClass = 'fa-book';
-                if (subject.includes('Toán')) iconClass = 'fa-calculator';
-                else if (subject.includes('Tiếng Anh')) iconClass = 'fa-globe';
-                else if (subject.includes('Tin Học')) iconClass = 'fa-laptop-code';
-                else if (subject.includes('Công Nghệ')) iconClass = 'fa-tools';
-                else if (subject.includes('Lịch sử') || subject.includes('Địa lý')) iconClass = 'fa-map-marked-alt';
-                else if (subject.includes('Khoa học')) iconClass = 'fa-flask';
-                else if (subject.includes('Tự nhiên')) iconClass = 'fa-leaf';
-                
-                button.innerHTML = `
-                    <i class="fas ${iconClass}"></i>
-                    ${subject}
-                `;
-                
-                button.addEventListener('click', () => selectSubject(subject));
-                subjectButtonsContainer.appendChild(button);
-            });
-            
-            subjectScreenTitle.textContent = `Lớp ${gradeNames[currentGrade]} - Chọn môn học`;
-        }
-
-        // Select subject
         function selectSubject(subject) {
             currentSubject = subject;
-            subjectScreen.style.display = 'none';
-            chapterScreen.style.display = 'flex';
-            
-            // Update breadcrumb
-            updateBreadcrumb();
-            
-            // Load chapters for the selected subject
-            loadChapters();
-        }
-
-        // Back to subject selection
-        function backToSubjects() {
-            currentSubject = '';
-            currentChapterId = '';
-            currentChapterName = '';
-            
-            subjectScreen.style.display = 'flex';
-            chapterScreen.style.display = 'none';
-            chatbotContainer.style.display = 'none';
-            
-            // Update breadcrumb
-            updateBreadcrumb();
-        }
-
-        // Load chapters for the selected subject
-        async function loadChapters() {
-            chapterList.innerHTML = '<div class="text-center py-3">Đang tải danh sách chương...</div>';
-            chapterScreenTitle.textContent = `Môn ${currentSubject} - Chọn chương`;
-
-            try {
-                const snapshot = await db.collection('grades').doc(currentGrade)
-                    .collection('subjects').doc(currentSubject)
-                    .collection('chapters').orderBy('createdAt').get();
-                
-                if (snapshot.empty) {
-                    chapterList.innerHTML = '<div class="text-center py-3">Chưa có chương nào</div>';
-                    return;
-                }
-
-                chapterList.innerHTML = '';
-                snapshot.forEach(doc => {
-                    const chapter = doc.data();
-                    const chapterItem = document.createElement('div');
-                    chapterItem.className = 'chapter-card';
-                    chapterItem.innerHTML = `
-                        <h3>${chapter.name}</h3>
-                        <p>Nhấn để xem bài tập</p>
-                    `;
-                    chapterItem.addEventListener('click', () => selectChapter(doc.id, chapter.name));
-                    chapterList.appendChild(chapterItem);
-                });
-            } catch (error) {
-                console.error('Lỗi khi tải chương:', error);
-                chapterList.innerHTML = '<div class="text-center py-3 text-danger">Lỗi khi tải danh sách chương</div>';
-            }
-        }
-
-        // Select chapter
-        async function selectChapter(chapterId, chapterName) {
-            currentChapterId = chapterId;
-            currentChapterName = chapterName;
-            chapterScreen.style.display = 'none';
+            homeMenu.style.display = 'none';
             chatbotContainer.style.display = 'flex';
-            
-            // Update breadcrumb
-            updateBreadcrumb();
-            
-            // Load exercises for the selected chapter
-            await loadExercises();
-            
-            // Show welcome message
             khungTroChuyen.innerHTML = '';
-            themTinNhanVaoGiaoDien("bot", `Chào mừng em đến với chương "${chapterName}" của môn ${currentSubject}! Tôi có thể giúp gì cho em?`);
-        }
+            themTinNhanVaoGiaoDien("bot", `Chào mừng em đến với môn ${subjectFilters[subject].name}! Thầy có thể giúp gì cho em?`);
 
-        // Back to chapter selection
-        function backToChapters() {
-            currentChapterId = '';
-            currentChapterName = '';
-            
-            chapterScreen.style.display = 'flex';
-            chatbotContainer.style.display = 'none';
-            
-            // Update breadcrumb
-            updateBreadcrumb();
-        }
-
-        // Load exercises for the selected chapter
-        async function loadExercises() {
-            currentExercises = [];
-            
-            try {
-                const snapshot = await db.collection('grades').doc(currentGrade)
-                    .collection('subjects').doc(currentSubject)
-                    .collection('chapters').doc(currentChapterId)
-                    .collection('exercises').orderBy('createdAt').get();
-                
-                if (!snapshot.empty) {
-                    snapshot.forEach(doc => {
-                        currentExercises.push({
-                            id: doc.id,
-                            question: doc.data().question
-                        });
-                    });
+            sidebarButtons.forEach(button => {
+                if (button.dataset.subject === subject) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
                 }
-                
-                // Update subject filters with loaded exercises
-                const subjectKey = currentSubject.toLowerCase().replace(/ /g, '-').replace(/&/g, '-');
-                if (subjectFilters[subjectKey]) {
-                    subjectFilters[subjectKey].homeworkExamples = currentExercises.map(ex => ex.question);
-                }
-            } catch (error) {
-                console.error('Lỗi khi tải bài tập:', error);
-            }
+            });
         }
 
-        // Update breadcrumb navigation
-        function updateBreadcrumb() {
-            breadcrumb.innerHTML = '';
-            
-            // Add grade
-            if (currentGrade) {
-                const gradeItem = document.createElement('li');
-                gradeItem.className = 'breadcrumb-item';
-                gradeItem.innerHTML = `<a href="#" onclick="window.backToGrades()">${gradeNames[currentGrade]}</a>`;
-                breadcrumb.appendChild(gradeItem);
-            }
-            
-            // Add subject
-            if (currentSubject) {
-                const subjectItem = document.createElement('li');
-                subjectItem.className = 'breadcrumb-item';
-                subjectItem.innerHTML = `<a href="#" onclick="window.backToSubjects()">${currentSubject}</a>`;
-                breadcrumb.appendChild(subjectItem);
-            }
-            
-            // Add chapter
-            if (currentChapterName) {
-                const chapterItem = document.createElement('li');
-                chapterItem.className = 'breadcrumb-item active';
-                chapterItem.textContent = currentChapterName;
-                breadcrumb.appendChild(chapterItem);
-            }
-        }
-
-        // Add message to chat interface
         function themTinNhanVaoGiaoDien(nguoiGui, vanBan) {
             const divTinNhan = document.createElement('div');
             divTinNhan.classList.add('tin-nhan', `tin-nhan-${nguoiGui}`);
 
-            // Format fractions and mixed numbers before processing markdown
             let processedText = formatFractionsAndMixedNumbers(vanBan);
-            
-            // Convert basic markdown (bold, line breaks)
             processedText = processedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             processedText = processedText.replace(/\n/g, '<br>');
 
             divTinNhan.innerHTML = processedText;
             khungTroChuyen.appendChild(divTinNhan);
-            // Scroll to bottom of chat
             khungTroChuyen.scrollTop = khungTroChuyen.scrollHeight;
         }
 
-        // Start multiple choice quiz
-        function startMultipleChoiceQuiz(subject) {
-            if (!currentExercises || currentExercises.length === 0) {
-                themTinNhanVaoGiaoDien("bot", `Hiện không có bài tập trắc nghiệm nào cho chương này.`);
-                return;
-            }
-
-            // Get all exercises for the current chapter
-            const allQuestions = currentExercises;
-            
-            // If there are more than 10 questions, select 10 randomly
-            const selectedQuestions = (allQuestions.length > 10) 
-                ? getRandomQuestions(allQuestions, 10) 
-                : allQuestions;
-
-            quizSubject = subject;
-            currentQuiz = {
-                questions: selectedQuestions,
-                currentQuestionIndex: 0,
-                userAnswers: [],
-                score: 0
-            };
-            
-            showNextQuestion();
-        }
-
-        // Get random questions
-        function getRandomQuestions(questions, count) {
-            const shuffled = [...questions].sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, count);
-        }
-
-        // Show next question in quiz
-        function showNextQuestion() {
-            if (currentQuiz.currentQuestionIndex >= currentQuiz.questions.length) {
-                // End of quiz
-                finishQuiz();
-                return;
-            }
-            
-            const question = currentQuiz.questions[currentQuiz.currentQuestionIndex];
-            let message = `Câu ${currentQuiz.currentQuestionIndex + 1}: ${question.question}\n\n`;
-            message += "Hãy trả lời câu hỏi này (em có thể nhập câu trả lời của mình)";
-            
-            themTinNhanVaoGiaoDien("bot", message);
-        }
-
-        // Finish quiz and show results
-        function finishQuiz() {
-            const totalQuestions = currentQuiz.questions.length;
-            const score = (currentQuiz.score / totalQuestions) * 10; // Calculate score out of 10
-            
-            let resultMessage = `Kết thúc bài tập!\n`;
-            resultMessage += `em đã hoàn thành ${totalQuestions} câu hỏi\n`;
-            resultMessage += `Số câu đúng: ${currentQuiz.score}/${totalQuestions}\n`;
-            resultMessage += `Điểm của em: ${score.toFixed(1)}/10\n\n`;
-            
-            themTinNhanVaoGiaoDien("bot", resultMessage);
-            currentQuiz = null;
-            quizSubject = '';
-        }
-
-        // Handle quiz answer
-        function handleQuizAnswer(answer) {
-            const currentQuestion = currentQuiz.questions[currentQuiz.currentQuestionIndex];
-            const userAnswer = answer.trim();
-            
-            // Store user answer
-            currentQuiz.userAnswers.push(userAnswer);
-            
-            // For now, just count all answers as correct (since we don't have answer keys)
-            currentQuiz.score++;
-            themTinNhanVaoGiaoDien("bot", "Cảm ơn câu trả lời của em!");
-                
-            // Move to next question
-            currentQuiz.currentQuestionIndex++;
-            setTimeout(() => showNextQuestion(), 1500);
-        }
-
-        // Send message
         async function guiTinNhan() {
             const tinNhanNguoiDung = oNhapTinNhan.value.trim();
             if (!tinNhanNguoiDung) return;
@@ -1023,55 +929,31 @@
             oNhapTinNhanPreview.innerHTML = '';
             adjustTextareaHeight();
 
-            // Handle if in quiz mode
-            if (currentQuiz) {
-                handleQuizAnswer(tinNhanNguoiDung);
-                return;
-            }
-
-            // Check for multiple choice quiz request
-            const isAskingForMultipleChoice = /(bài tập trắc nghiệm|trắc nghiệm|bài tập TN)/i.test(tinNhanNguoiDung);
-            if (isAskingForMultipleChoice) {
-                const subjectKey = currentSubject.toLowerCase().replace(/ /g, '-').replace(/&/g, '-');
-                startMultipleChoiceQuiz(subjectKey);
-                return;
-            }
-
-            // Handle simple greetings
-            const loiChao = ["chào", "hello", "hi"];
+            const loiChao = ["chào"];
             if (loiChao.some(chao => tinNhanNguoiDung.toLowerCase().includes(chao))) {
-                themTinNhanVaoGiaoDien("bot", `Chào em! Tôi là một chatbot AI được thiết kế để trả lời các câu hỏi cấp tiểu học cho môn ${currentSubject}, chương "${currentChapterName}". em có câu hỏi gì không?`);
+                themTinNhanVaoGiaoDien("bot", `Chào em! Thầy là một chatbot AI được thiết kế để trả lời các câu hỏi cấp tiểu học cho môn ${subjectFilters[currentSubject].name}. Bạn có câu hỏi gì không?`);
                 return;
             }
 
-            // --- HOMEWORK REQUEST LOGIC ---
             const isAskingForHomework = homeworkRequestPhrases.test(tinNhanNguoiDung.toLowerCase());
 
             if (isAskingForHomework) {
-                const subjectKey = currentSubject.toLowerCase().replace(/ /g, '-').replace(/&/g, '-');
-                
-                if (currentExercises && currentExercises.length > 0) {
-                    let examples = currentExercises.map((e, i) => `${i + 1}. ${e.question}`).join('\n');
-                    themTinNhanVaoGiaoDien("bot", `Dưới đây là một số bài tập trong chương "${currentChapterName}" môn ${currentSubject}:\n${examples}\n\nem hãy thử giải các bài tập này và hỏi tôi nếu có bất kỳ câu hỏi nào về cách làm nhé!`);
+                if (currentSubject && subjectFilters[currentSubject] && subjectFilters[currentSubject].homeworkExamples.length > 0) {
+                    let examples = subjectFilters[currentSubject].homeworkExamples.map((e, i) => `${i + 1}. ${e}`).join('\n');
+                    themTinNhanVaoGiaoDien("bot", `Chào em! Thầy có một vài dạng bài tập cơ bản mà em có thể tham khảo trong môn **${subjectFilters[currentSubject].name}** đây:\n${examples}\n\nEm hãy thử giải các bài tập này và hỏi thầy nếu có bất kỳ câu hỏi nào về cách làm nhé!`);
                 } else {
-                    themTinNhanVaoGiaoDien("bot", `Hiện không có bài tập nào trong chương "${currentChapterName}" của môn ${currentSubject}. em có thể hỏi tôi về cách làm một dạng bài tập nào đó, tôi sẽ hướng dẫn em!`);
+                    themTinNhanVaoGiaoDien("bot", "Chào em! Hiện tại thầy chưa có sẵn bài tập cho môn này. Thay vào đó, em có thể hỏi thầy về cách làm một dạng bài tập nào đó, thầy sẽ hướng dẫn em nhé!");
                 }
                 return;
             }
-            // --- END HOMEWORK REQUEST LOGIC ---
 
-            // Check if question is appropriate for elementary level
             if (!laCauHoiTieuHoc(tinNhanNguoiDung)) {
-                themTinNhanVaoGiaoDien("bot", "Xin lỗi, tôi chỉ có thể giúp em với các câu hỏi và bài tập ở cấp độ tiểu học. Vui lòng hỏi những câu hỏi phù hợp hơn nhé.");
+                themTinNhanVaoGiaoDien("bot", "Xin lỗi, tôi chỉ có thể giúp bạn với các câu hỏi và bài tập ở cấp độ tiểu học. Vui lòng hỏi những câu hỏi phù hợp hơn nhé.");
                 return;
             }
 
-            // Send question to AI model if it's not a homework request and is appropriate
             try {
-                const subjectKey = currentSubject.toLowerCase().replace(/ /g, '-').replace(/&/g, '-');
-                const subjectName = subjectFilters[subjectKey]?.name || currentSubject;
-                
-                const loiNhac = `em là một giáo viên AI thân thiện và hữu ích (lưu ý xưng hô với người dùng là thầy - em), chuyên giải đáp các câu hỏi và gợi ý cách làm bài tập cho học sinh tiểu học trong môn ${subjectName}, chương "${currentChapterName}". Hãy trả lời một cách đơn giản, dễ hiểu, và chỉ tập trung vào kiến thức cấp tiểu học. Tuyệt đối không giải bài tập cụ thể, chỉ gợi ý phương pháp hoặc hướng dẫn. Nếu câu hỏi không phù hợp cấp tiểu học hoặc yêu cầu giải bài tập chi tiết, hãy từ chối một cách nhẹ nhàng và lịch sự. Nếu người dùng xin bài tập để làm thì cũng có thể được.
+                const loiNhac = `Bạn là một giáo viên AI thân thiện và hữu ích (lưu ý bạn luôn là thầy giáo và xưng hô với người dùng là thầy - em), chuyên giải đáp các câu hỏi và gợi ý cách làm bài tập cho học sinh tiểu học trong môn ${subjectFilters[currentSubject].name}. Hãy trả lời một cách đơn giản, dễ hiểu, và chỉ tập trung vào kiến thức cấp tiểu học. Tuyệt đối không giải bài tập cụ thể, chỉ gợi ý phương pháp hoặc hướng dẫn. Nếu câu hỏi không phù hợp cấp tiểu học hoặc yêu cầu giải bài tập chi tiết, hãy từ chối một cách nhẹ nhàng và lịch sự. Nếu người dùng xin bài tập để làm thì cũng có thể được.
                 \n\nCâu hỏi: ${tinNhanNguoiDung}`;
 
                 const ketQua = await moHinh.generateContent(loiNhac);
@@ -1085,22 +967,14 @@
             }
         }
 
-        /**
-         * Check if a question is appropriate for elementary level.
-         * @param {string} cauHoi - User's question.
-         * @returns {boolean} - True if appropriate, False if not.
-         */
         function laCauHoiTieuHoc(cauHoi) {
             const cauHoiThuong = cauHoi.toLowerCase();
 
-            // Check general exclude keywords
             const laKhongTieuHocChung = generalExcludeKeywords.some(tuKhoa => cauHoiThuong.includes(tuKhoa));
             if (laKhongTieuHocChung) return false;
 
-            // Check subject-specific exclude keywords
-            const subjectKey = currentSubject.toLowerCase().replace(/ /g, '-').replace(/&/g, '-');
-            if (subjectFilters[subjectKey]) {
-                const subjectSpecificKeywords = subjectFilters[subjectKey].excludeKeywords;
+            if (currentSubject && subjectFilters[currentSubject]) {
+                const subjectSpecificKeywords = subjectFilters[currentSubject].excludeKeywords;
                 const laKhongTieuHocMonHoc = subjectSpecificKeywords.some(tuKhoa => cauHoiThuong.includes(tuKhoa));
                 if (laKhongTieuHocMonHoc) return false;
             }
@@ -1108,7 +982,13 @@
             return true;
         }
 
-        // Initialize the app when DOM is loaded
+        function laYeuCauGiaiBaiTap(cauHoi) {
+            const cauHoiThuong = cauHoi.toLowerCase();
+            return homeworkRequestPhrases.test(cauHoiThuong);
+        }
+
+        loadHomeworkData();
+
         document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
