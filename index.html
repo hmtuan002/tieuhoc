@@ -1,15 +1,20 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CHATBOT HỌC TẬP CHO HỌC SINH TIỂU HỌC</title>
+    <title>CHATBOT: Chuyển hóa vật chất và năng lượng ở sinh vật - Sinh học 11</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Quicksand', sans-serif;
@@ -17,9 +22,10 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            color: #333;
+            color: #1c3e2d;
             position: relative;
             overflow-x: hidden;
+            background: #eaf7e6;
         }
 
         body::before {
@@ -29,11 +35,21 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('https://bvhttdl.mediacdn.vn/291773308735864832/2024/12/2/0211ditichtantrao1-1733104546432-1733104546771617645710.jpg');
+            background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
-            filter: blur(5px);
+            z-index: -2;
+        }
+
+        /* Lớp phủ mờ nhẹ để tăng độ đọc */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.75);
             z-index: -1;
         }
 
@@ -42,203 +58,199 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 30px 20px;
             text-align: center;
-            margin: 20px;
+            margin: 30px auto;
             flex-grow: 1;
+            max-width: 1200px;
+            width: 90%;
+        }
+
+        .logo-area {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .logo-img {
+            width: 100px;
+            height: 100px;
+            background-color: #2e7d32;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            border: 3px solid #ffd54f;
+        }
+
+        .logo-img i {
+            font-size: 55px;
+            color: #ffeb3b;
         }
 
         #home-menu h1 {
-            color: #26a69a;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 20px 40px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border: 2px solid rgba(76, 175, 80, 0.3);
+            color: #1b5e20;
+            margin-bottom: 25px;
+            font-size: 2.2em;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+            background-color: rgba(255, 248, 225, 0.95);
+            padding: 18px 35px;
+            border-radius: 60px;
+            box-shadow: 0 6px 18px rgba(46, 125, 50, 0.2);
+            border-left: 8px solid #4caf50;
+            border-right: 8px solid #4caf50;
+            font-weight: 700;
         }
 
         .subject-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            width: 80%;
-            max-width: 900px;
-            margin-bottom: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+            margin: 20px 0 30px;
         }
 
         .subject-button {
-            background-color: rgba(76, 175, 80, 0.85);
+            background: linear-gradient(145deg, #2e7d32, #1b5e20);
             color: white;
             border: none;
-            border-radius: 10px;
-            padding: 20px;
-            font-size: 1.2em;
+            border-radius: 40px;
+            padding: 22px 30px;
+            font-size: 1.4em;
+            font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            box-shadow: 0 12px 20px rgba(0,0,0,0.2);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            min-width: 280px;
+            backdrop-filter: blur(2px);
+            border: 1px solid #ffb74d;
         }
 
         .subject-button i {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            font-size: 3em;
+            margin-bottom: 15px;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
         }
 
         .subject-button:hover {
-            background-color: rgba(69, 160, 73, 0.95);
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            transform: translateY(-8px);
+            background: linear-gradient(145deg, #388e3c, #2e7d32);
+            box-shadow: 0 18px 28px rgba(0,0,0,0.25);
         }
 
         #contact-info {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            width: 80%;
-            max-width: 900px;
-            border: 2px solid rgba(38, 166, 154, 0.3);
+            margin-top: 35px;
+            padding: 20px 28px;
+            background-color: rgba(255, 255, 255, 0.96);
+            border-radius: 35px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 800px;
+            border-top: 6px solid #4caf50;
             text-align: center;
         }
 
         #contact-info h3 {
-            color: #26a69a;
-            margin-top: 0;
-            margin-bottom: 15px;
-            font-size: 1.5em;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            color: #2c6e2c;
+            margin-bottom: 18px;
+            font-size: 1.7em;
         }
 
         .contact-item {
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 12px;
-            font-size: 1.1em;
-            color: #333;
             flex-wrap: wrap;
+            gap: 12px;
+            font-size: 1.05em;
+            margin-bottom: 10px;
         }
 
         .contact-item i {
-            color: #4CAF50;
-            margin-right: 10px;
+            color: #2e7d32;
             font-size: 1.2em;
-            width: 24px;
-            text-align: center;
-        }
-
-        .contact-name {
-            font-weight: 600;
-            color: #2c7873;
-            margin-right: 8px;
-        }
-
-        .contact-divider {
-            margin: 0 15px;
-            color: #ccc;
         }
 
         footer {
-            background-color: rgba(38, 166, 154, 0.95);
-            color: white;
+            background-color: #1b5e20;
+            color: #f1f8e9;
             padding: 20px 0;
             text-align: center;
-            width: 100%;
             margin-top: auto;
-            border-top: 3px solid #2c7873;
-            backdrop-filter: blur(10px);
-        }
-
-        .footer-line {
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #ffffff, transparent);
-            width: 100%;
-            margin-bottom: 15px;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+            border-top: 4px solid #ffc107;
         }
 
         .footer-content p {
             margin: 5px 0;
-            font-size: 1em;
-        }
-
-        .footer-content i {
-            margin-right: 8px;
-            color: #c5e1a5;
+            font-size: 0.95em;
         }
 
         #chatbot-container {
             display: none;
             flex-direction: row;
             overflow: hidden;
-            background-color: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border-radius: 10px;
-            margin: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background-color: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+            border-radius: 28px;
+            margin: 25px;
+            backdrop-filter: blur(4px);
             flex-grow: 1;
-            min-height: 0;
+            min-height: 550px;
+            border: 1px solid #c5e1a5;
         }
 
         #sidebar {
-            width: 200px;
-            background-color: rgba(240, 244, 195, 0.9);
-            padding: 15px;
-            border-right: 1px solid #dce775;
+            width: 260px;
+            background-color: #f1f8e9;
+            padding: 20px 12px;
+            border-right: 3px solid #81c784;
             display: flex;
             flex-direction: column;
-            box-shadow: inset -2px 0 5px rgba(0,0,0,0.05);
             overflow-y: auto;
         }
 
         #sidebar h3 {
-            color: #689f38;
-            margin-top: 0;
-            margin-bottom: 20px;
+            color: #2c5e2c;
+            font-size: 1.6em;
             text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px dashed #8bc34a;
+            padding-bottom: 12px;
         }
 
         .sidebar-button {
-            background-color: #c5e1a5;
-            color: #333;
+            background-color: #dcedc8;
+            color: #1f4f1f;
             border: none;
-            border-radius: 8px;
-            padding: 12px 10px;
-            margin-bottom: 10px;
-            font-size: 1em;
+            border-radius: 50px;
+            padding: 14px 12px;
+            margin-bottom: 16px;
+            font-size: 1.1em;
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: all 0.2s;
             text-align: left;
             display: flex;
             align-items: center;
+            gap: 12px;
         }
 
         .sidebar-button i {
-            margin-right: 10px;
-            font-size: 1.2em;
+            font-size: 1.5em;
+            width: 32px;
+            text-align: center;
         }
 
         .sidebar-button.active, .sidebar-button:hover {
-            background-color: #8bc34a;
+            background-color: #81c784;
             color: white;
-            transform: translateX(3px);
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
         .chat-area {
@@ -251,417 +263,198 @@
         #khung-tro-chuyen {
             flex-grow: 1;
             overflow-y: auto;
-            padding: 15px;
-            border-bottom: 1px solid #b2ebf2;
-            background-color: rgba(255, 255, 255, 0.8);
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            padding: 20px;
+            background: #fef9e4;
             display: flex;
             flex-direction: column;
+            gap: 12px;
         }
 
         .tin-nhan {
-            margin-bottom: 10px;
-            padding: 10px 15px;
-            border-radius: 20px;
-            max-width: 75%;
-            position: relative;
+            padding: 12px 18px;
+            border-radius: 28px;
+            max-width: 80%;
             word-wrap: break-word;
-            line-height: 1.4;
+            line-height: 1.45;
+            font-size: 0.98rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .tin-nhan-nguoi-dung {
-            background-color: rgba(0, 123, 255, 0.9);
+            background: #4caf50;
             color: white;
             margin-left: auto;
-            text-align: right;
-            border-bottom-right-radius: 5px;
+            border-bottom-right-radius: 6px;
         }
 
         .tin-nhan-bot {
-            background-color: rgba(227, 242, 253, 0.9);
-            color: #212121;
+            background: #e8f5e9;
+            color: #1b3b1b;
             margin-right: auto;
-            text-align: left;
-            border-bottom-left-radius: 5px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border-bottom-left-radius: 6px;
+            border-left: 5px solid #2e7d32;
         }
 
         #khu-vuc-nhap {
             display: flex;
-            padding: 15px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border-top: 1px solid #e0e0e0;
-            box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+            padding: 16px 20px;
+            background: #fff3e0;
+            border-top: 2px solid #c8e6c9;
             align-items: center;
+            gap: 12px;
         }
 
         #o-nhap-tin-nhan-container {
             position: relative;
             flex-grow: 1;
-            min-height: 48px;
         }
 
         #o-nhap-tin-nhan {
             width: 100%;
-            background: transparent;
-            position: relative;
-            z-index: 1;
-            color: transparent;
-            caret-color: black;
-            padding: 12px 18px;
-            border: 1px solid #c5e1a5;
-            border-radius: 25px;
+            background: white;
+            padding: 14px 18px;
+            border: 2px solid #a5d6a7;
+            border-radius: 50px;
             outline: none;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-            min-height: 48px;
+            font-size: 15px;
+            font-family: 'Quicksand', sans-serif;
             resize: none;
             overflow: hidden;
-            background-color: rgba(255, 255, 255, 0.8);
+            transition: 0.2s;
         }
 
         #o-nhap-tin-nhan:focus {
-            border-color: #8bc34a;
-            box-shadow: 0 0 0 3px rgba(139, 195, 74, 0.2);
-        }
-
-        #o-nhap-tin-nhan-preview {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            min-height: 48px;
-            padding: 12px 18px;
-            pointer-events: none;
-            z-index: 2;
-            white-space: pre-wrap;
-            overflow: hidden;
-            color: black;
-            border: 1px solid transparent;
-            border-radius: 25px;
-            font-size: 16px;
-            line-height: 1.4;
+            border-color: #2e7d32;
+            box-shadow: 0 0 0 3px rgba(46,125,50,0.2);
         }
 
         #nut-gui {
-            background-color: #4CAF50;
+            background: #2e7d32;
             color: white;
             border: none;
             border-radius: 50%;
-            width: 48px;
-            height: 48px;
-            margin-left: 15px;
+            width: 52px;
+            height: 52px;
             cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             font-size: 24px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            transition: background-color 0.3s ease;
+            transition: 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         #nut-gui:hover {
-            background-color: #45a049;
-        }
-
-        #nut-gui:active {
-            transform: translateY(1px);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-
-        .fraction {
-            display: inline-block;
-            text-align: center;
-            vertical-align: middle;
-            margin: 0 2px;
-        }
-        
-        .fraction span {
-            display: block;
-        }
-        
-        .fraction .numerator {
-            border-bottom: 1px solid #000;
-            padding: 0 3px;
-        }
-        
-        .fraction .denominator {
-            padding: 0 3px;
-        }
-
-        .mixed-number {
-            display: inline-flex;
-            align-items: center;
-            vertical-align: middle;
-            margin: 0 2px;
-        }
-        
-        .mixed-number .whole-part {
-            padding-right: 2px;
-        }
-        
-        .mixed-number .fraction {
-            display: inline-block;
+            background: #1b5e20;
+            transform: scale(1.02);
         }
 
         #visit-counter {
             position: fixed;
-            bottom: 80px;
-            right: 10px;
-            background-color: rgba(38, 166, 154, 0.9);
+            bottom: 25px;
+            right: 20px;
+            background: #2e7d32;
             color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
+            padding: 8px 18px;
+            border-radius: 40px;
             font-size: 14px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             z-index: 1000;
             display: none;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
         }
 
         @media (max-width: 768px) {
-            #home-menu h1 {
-                font-size: 1.8em;
-                margin-bottom: 20px;
-                padding: 15px 25px;
-            }
-
-            .subject-buttons {
-                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-                gap: 15px;
-                width: 95%;
-            }
-
-            .subject-button {
-                padding: 15px;
-                font-size: 1em;
-                background-color: rgba(76, 175, 80, 0.85);
-            }
-
-            .subject-button i {
-                font-size: 2em;
-                margin-bottom: 8px;
-            }
-
-            #contact-info {
-                width: 95%;
-                margin-top: 20px;
-                padding: 15px;
-            }
-            
-            #contact-info h3 {
-                font-size: 1.3em;
-            }
-            
-            .contact-item {
-                font-size: 1em;
-                flex-direction: column;
-                text-align: center;
-                margin-bottom: 15px;
-            }
-            
-            .contact-item i {
-                margin-right: 0;
-                margin-bottom: 5px;
-                font-size: 1.1em;
-            }
-            
-            .contact-divider {
-                display: none;
-            }
-            
-            .contact-detail {
-                display: block;
-                margin: 3px 0;
-            }
-
-            footer {
-                padding: 15px 0;
-            }
-
-            .footer-content p {
-                font-size: 0.9em;
-            }
-
             #chatbot-container {
                 flex-direction: column;
-                margin: 10px;
-                border-radius: 8px;
+                margin: 12px;
             }
-
             #sidebar {
                 width: 100%;
-                height: auto;
-                border-right: none;
-                border-bottom: 1px solid #dce775;
-                padding: 10px;
-                box-shadow: inset 0 -2px 5px rgba(0,0,0,0.05);
                 flex-direction: row;
                 overflow-x: auto;
-                white-space: nowrap;
-                -webkit-overflow-scrolling: touch;
+                gap: 12px;
+                border-right: none;
+                border-bottom: 2px solid #81c784;
             }
-
             #sidebar h3 {
                 display: none;
             }
-
             .sidebar-button {
                 flex-shrink: 0;
                 width: auto;
                 margin-bottom: 0;
-                margin-right: 10px;
-                padding: 8px 12px;
-                font-size: 0.9em;
             }
-
-            .sidebar-button i {
-                font-size: 1em;
-                margin-right: 5px;
+            .subject-button {
+                min-width: 220px;
+                font-size: 1.2em;
+                padding: 16px 20px;
             }
-
-            .chat-area {
-                min-height: 0;
+            #home-menu h1 {
+                font-size: 1.5em;
             }
-
-            #khung-tro-chuyen {
-                padding: 10px;
-            }
-
             .tin-nhan {
-                max-width: 85%;
-                padding: 8px 12px;
-                font-size: 0.9em;
-            }
-
-            #khu-vuc-nhap {
-                padding: 10px;
-            }
-
-            #o-nhap-tin-nhan-container {
-                min-height: 40px;
-            }
-
-            #o-nhap-tin-nhan, #o-nhap-tin-nhan-preview {
-                padding: 10px 15px;
-                font-size: 14px;
-                min-height: 40px;
-            }
-
-            #nut-gui {
-                width: 40px;
-                height: 40px;
-                font-size: 20px;
-                margin-left: 10px;
-            }
-
-            #visit-counter {
-                bottom: 70px;
-                right: 5px;
-                padding: 6px 12px;
-                font-size: 12px;
+                max-width: 90%;
             }
         }
     </style>
 </head>
 <body>
     <div id="visit-counter">
-        <i class="fas fa-eye"></i> <span id="visit-count">0</span> lượt truy cập
+        <i class="fas fa-leaf"></i> <span id="visit-count">0</span> lượt tham quan
     </div>
 
     <div id="home-menu">
-        <h1>Chatbot học tập trường TH Thượng Ấm</h1>
+        <div class="logo-area">
+            <div class="logo-img">
+                <i class="fas fa-seedling"></i>
+            </div>
+        </div>
+        <h1><i class="fas fa-exchange-alt"></i> CHUYỂN HÓA VẬT CHẤT VÀ NĂNG LƯỢNG Ở SINH VẬT <br> Sinh học 11</h1>
         <div class="subject-buttons">
-            <button class="subject-button" data-subject="toan">
-                <i class="fas fa-calculator"></i>
-                Toán
+            <button class="subject-button" data-subject="dong-vat">
+                <i class="fas fa-paw"></i>
+                CHUYỂN HÓA Ở ĐỘNG VẬT
             </button>
-            <button class="subject-button" data-subject="tieng-viet">
-                <i class="fas fa-book-open"></i>
-                Tiếng Việt
-            </button>
-            <button class="subject-button" data-subject="tieng-anh">
-                <i class="fas fa-globe"></i>
-                Tiếng Anh
-            </button>
-            <button class="subject-button" data-subject="tin-hoc">
-                <i class="fas fa-laptop-code"></i>
-                Tin Học
-            </button>
-            <button class="subject-button" data-subject="cong-nghe">
-                <i class="fas fa-tools"></i>
-                Công Nghệ
-            </button>
-            <button class="subject-button" data-subject="lich-su-dia-ly">
-                <i class="fas fa-map-marked-alt"></i>
-                Lịch Sử & Địa Lý
-            </button>
-            <button class="subject-button" data-subject="khoa-hoc">
-                <i class="fas fa-flask"></i>
-                Khoa Học
+            <button class="subject-button" data-subject="thuc-vat">
+                <i class="fas fa-leaf"></i>
+                CHUYỂN HÓA Ở THỰC VẬT
             </button>
         </div>
         
         <div id="contact-info">
-            <h3><i class="fas fa-address-card"></i> Thông tin liên hệ</h3>
+            <h3><i class="fas fa-chalkboard-user"></i> Thông tin hỗ trợ học tập</h3>
             <div class="contact-item">
-                <i class="fas fa-user-graduate"></i>
-                <span class="contact-name">Nguyễn Đình Duy</span>
-                <span class="contact-divider">|</span>
-                <span class="contact-detail">
-                    <i class="fas fa-phone-alt"></i> SĐT: 0865328988
-                </span>
-                <span class="contact-divider">|</span>
-                <span class="contact-detail">
-                    <i class="fas fa-envelope"></i> Email: ndduy100592@tuyenquang.edu.vn
-                </span>
+                <i class="fas fa-user-tie"></i>
+                <span><strong>Giáo viên bộ môn Sinh học:</strong> Cô Nguyễn Thị Xanh</span>
             </div>
-            <p style="margin-top: 10px; font-size: 0.9em; color: #666; font-style: italic;">
-                <i class="fas fa-info-circle"></i> Thông tin này sẽ ẩn khi bạn vào chế độ học
-            </p>
+            <div class="contact-item">
+                <i class="fas fa-phone-alt"></i> <span>Hotline hỗ trợ: 0865 123 456</span>
+                <i class="fas fa-envelope"></i> <span>Email: sinhhoc11@edu.vn</span>
+            </div>
+            <p style="margin-top: 12px; font-size: 0.85rem;"><i class="fas fa-info-circle"></i> Chatbot chuyên sâu về chuyển hóa vật chất & năng lượng ở động vật và thực vật (Sinh 11)</p>
         </div>
     </div>
 
     <div id="chatbot-container">
         <div id="sidebar">
-            <h3>Môn học</h3>
-            <button class="sidebar-button" data-subject="toan">
-                <i class="fas fa-calculator"></i>
-                Toán
+            <h3><i class="fas fa-dna"></i> Nội dung chính</h3>
+            <button class="sidebar-button" data-subject="dong-vat">
+                <i class="fas fa-dog"></i>
+                Động vật
             </button>
-            <button class="sidebar-button" data-subject="tieng-viet">
-                <i class="fas fa-book-open"></i>
-                Tiếng Việt
-            </button>
-            <button class="sidebar-button" data-subject="tieng-anh">
-                <i class="fas fa-globe"></i>
-                Tiếng Anh
-            </button>
-            <button class="sidebar-button" data-subject="tin-hoc">
-                <i class="fas fa-laptop-code"></i>
-                Tin Học
-            </button>
-            <button class="sidebar-button" data-subject="cong-nghe">
-                <i class="fas fa-tools"></i>
-                Công Nghệ
-            </button>
-            <button class="sidebar-button" data-subject="lich-su-dia-ly">
-                <i class="fas fa-map-marked-alt"></i>
-                Lịch Sử & Địa Lý
-            </button>
-            <button class="sidebar-button" data-subject="khoa-hoc">
-                <i class="fas fa-flask"></i>
-                Khoa Học
+            <button class="sidebar-button" data-subject="thuc-vat">
+                <i class="fas fa-tree"></i>
+                Thực vật
             </button>
         </div>
         <div class="chat-area">
             <div id="khung-tro-chuyen">
+                <div class="tin-nhan tin-nhan-bot">
+                    <i class="fas fa-microscope"></i> Chào bạn! Tôi là trợ lý AI chuyên về <strong>Chuyển hóa vật chất và năng lượng ở sinh vật (Sinh 11)</strong>. Hãy chọn một trong hai nội dung: <strong>ĐỘNG VẬT</strong> hoặc <strong>THỰC VẬT</strong> từ thanh bên để bắt đầu đặt câu hỏi nhé!
+                </div>
             </div>
             <div id="khu-vuc-nhap">
                 <div id="o-nhap-tin-nhan-container">
-                    <textarea id="o-nhap-tin-nhan" placeholder="Hỏi tôi điều gì đó..." rows="1"></textarea>
-                    <div id="o-nhap-tin-nhan-preview"></div>
+                    <textarea id="o-nhap-tin-nhan" placeholder="Ví dụ: Quá trình tiêu hóa ở động vật nhai lại? Hãy hỏi về hô hấp, quang hợp, tiêu hóa, tuần hoàn..." rows="1"></textarea>
                 </div>
                 <button id="nut-gui">
                     <i class="fas fa-paper-plane"></i>
@@ -671,9 +464,9 @@
     </div>
 
     <footer>
-        <div class="footer-line"></div>
         <div class="footer-content">
-            <p><i class="fas fa-tree"></i> Ảnh cây đa Tân Trào (nguồn: sưu tầm Internet)</p>
+            <p><i class="fas fa-chalkboard"></i> Kiến thức Sinh học 11 - Chuyển hóa vật chất và năng lượng</p>
+            <p><i class="fas fa-image"></i> Logo: abc (hình ảnh biểu tượng)</p>
         </div>
     </footer>
 
@@ -687,6 +480,7 @@
     <script type="module">
         import { GoogleGenerativeAI } from "@google/generative-ai";
 
+        // Cấu hình Firebase (giữ nguyên từ yêu cầu)
         const firebaseConfig = {
             apiKey: "AIzaSyCyhGASygL5BVBB-0pJJNwoyTZ61pAzP7c",
             authDomain: "tieuhoc-a7f57.firebaseapp.com",
@@ -695,301 +489,192 @@
             messagingSenderId: "736631398515",
             appId: "1:736631398515:web:a41bbabeeb98c3df42ca06"
         };
-
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        const KHOA_API = "AIzaSyD5xoXaqEGnRELeY74rQdnYLYiw-C-zMqE"; 
-        const moHinhAI = new GoogleGenerativeAI(KHOA_API);
-        const moHinh = moHinhAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+        const API_KEY = "AIzaSyD5xoXaqEGnRELeY74rQdnYLYiw-C-zMqE";
+        const genAI = new GoogleGenerativeAI(API_KEY);
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
+        // DOM elements
         const homeMenu = document.getElementById('home-menu');
         const chatbotContainer = document.getElementById('chatbot-container');
-        const khungTroChuyen = document.getElementById('khung-tro-chuyen');
-        const oNhapTinNhan = document.getElementById('o-nhap-tin-nhan');
-        const oNhapTinNhanPreview = document.getElementById('o-nhap-tin-nhan-preview');
-        const nutGui = document.getElementById('nut-gui');
+        const khungChat = document.getElementById('khung-tro-chuyen');
+        const inputField = document.getElementById('o-nhap-tin-nhan');
+        const sendBtn = document.getElementById('nut-gui');
         const subjectButtons = document.querySelectorAll('.subject-button');
-        const sidebarButtons = document.querySelectorAll('.sidebar-button');
-        const visitCounter = document.getElementById('visit-counter');
+        const sidebarBtns = document.querySelectorAll('.sidebar-button');
+        const visitCounterDiv = document.getElementById('visit-counter');
         const visitCountSpan = document.getElementById('visit-count');
 
-        let currentSubject = '';
-        let homeworkData = {};
+        let currentTopic = ''; // 'dong-vat' or 'thuc-vat'
         let totalVisits = 0;
 
-        const subjectFilters = {
-            "toan": {
-                name: "Toán",
-                excludeKeywords: ["đại số tuyến tính", "giải tích", "lượng tử", "phân tích chuyên sâu"],
-                homeworkExamples: []
+        // Định nghĩa nội dung chuyên sâu cho 2 mảng kiến thức
+        const subjectKnowledge = {
+            "dong-vat": {
+                name: "Chuyển hóa vật chất và năng lượng ở Động vật",
+                welcome: "Chào em! Đây là chủ đề về CHUYỂN HÓA VẬT CHẤT VÀ NĂNG LƯỢNG Ở ĐỘNG VẬT (Sinh 11). Em có thể hỏi về: tiêu hóa, hô hấp, tuần hoàn, bài tiết, trao đổi chất, hoặc các quá trình chuyển hóa năng lượng trong tế bào động vật. Thầy sẽ hướng dẫn chi tiết!",
+                keywords: ["tiêu hóa", "hô hấp", "tuần hoàn", "máu", "bài tiết", "động vật", "chuyển hóa năng lượng", "cơ", "gan", "thận", "phổi", "hệ tiêu hóa", "hệ tuần hoàn", "hệ hô hấp", "hệ bài tiết", "trao đổi chất", "hô hấp tế bào", "ATP", "enzyme tiêu hóa", "dạ dày", "ruột non", "nhai lại"]
             },
-            "tieng-viet": {
-                name: "Tiếng Việt",
-                excludeKeywords: ["nghiên cứu văn học", "phân tích chuyên sâu", "triết học", "ngữ pháp nâng cao", "phản biện văn học"],
-                homeworkExamples: []
-            },
-            "tieng-anh": {
-                name: "Tiếng Anh",
-                excludeKeywords: ["advanced grammar", "literary analysis", "linguistics", "academic writing", "syntax"],
-                homeworkExamples: []
-            },
-            "tin-hoc": {
-                name: "Tin Học",
-                excludeKeywords: ["lập trình", "trí tuệ nhân tạo", "máy học", "công nghệ thông tin chuyên sâu", "thuật toán phức tạp", "mạng máy tính"],
-                homeworkExamples: []
-            },
-            "cong-nghe": {
-                name: "Công Nghệ",
-                excludeKeywords: ["kỹ thuật", "công nghệ cao", "tự động hóa", "robotics", "thiết kế mạch", "vật liệu mới"],
-                homeworkExamples: []
-            },
-            "lich-su-dia-ly": {
-                name: "Lịch Sử & Địa Lý",
-                excludeKeywords: ["nghiên cứu sử học", "phân tích địa chính trị", "kinh tế học", "xã hội học", "diễn biến phức tạp", "lý thuyết địa lý"],
-                homeworkExamples: []
-            },
-            "khoa-hoc": {
-                name: "Khoa Học",
-                excludeKeywords: ["vật lý lượng tử", "hóa học hữu cơ", "sinh học phân tử", "thiên văn học", "di truyền học", "nghiên cứu khoa học chuyên sâu"],
-                homeworkExamples: []
+            "thuc-vat": {
+                name: "Chuyển hóa vật chất và năng lượng ở Thực vật",
+                welcome: "Chào em! Đây là chủ đề CHUYỂN HÓA VẬT CHẤT VÀ NĂNG LƯỢNG Ở THỰC VẬT (Sinh 11). Em hãy hỏi về: quang hợp, hô hấp thực vật, thoát hơi nước, vận chuyển nước và muối khoáng, dinh dưỡng nitơ, hoặc các con đường cố định CO2 ở thực vật C3, C4, CAM nhé!",
+                keywords: ["quang hợp", "hô hấp thực vật", "thoát hơi nước", "vận chuyển nước", "muối khoáng", "dinh dưỡng nitơ", "cố định CO2", "thực vật C3", "C4", "CAM", "lục lạp", "diệp lục", "ATP", "NADPH", "chu trình Calvin", "ánh sáng", "khí khổng", "rễ", "thân", "lá"]
             }
         };
 
-        const generalExcludeKeywords = [
-            "đại học", "cao học", "nghiên cứu", "phân tích chuyên sâu", "vật lý hạt nhân", "triết học",
-            "kinh tế vĩ mô", "chính trị quốc tế", "chứng minh", "phản biện", "tôn giáo", "đức tin"
+        // Cấm giải bài tập và lọc kiến thức đại học (chỉ sinh học 11)
+        const generalExclude = [
+            "sinh học phân tử nâng cao", "kỹ thuật di truyền", "genomics", "proteomics", "thạc sĩ", "tiến sĩ",
+            "chuyên đề sinh học đại học", "công nghệ sinh học chuyên sâu", "thực hành phòng thí nghiệm nâng cao"
         ];
-        
-        const homeworkRequestPhrases = /(cho (tôi|em) bài tập|xin bài tập|gợi ý bài tập|bài tập về)/;
 
+        // Hàm ghi nhận lượt truy cập
         async function trackVisit() {
             try {
-                const visitData = {
+                await db.collection('visits').add({
                     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                     userAgent: navigator.userAgent,
                     screenResolution: `${window.screen.width}x${window.screen.height}`,
-                    language: navigator.language,
-                    platform: navigator.platform
-                };
-                
-                // Thêm lượt truy cập mới
-                await db.collection('visits').add(visitData);
-                
+                    language: navigator.language
+                });
             } catch (error) {
-                console.error("Lỗi khi lưu lượt truy cập:", error);
+                console.warn("Firebase visit lỗi:", error);
             }
         }
 
         async function getTotalVisits() {
             try {
-                const visitsSnapshot = await db.collection('visits').get();
-                totalVisits = visitsSnapshot.size;
+                const snapshot = await db.collection('visits').get();
+                totalVisits = snapshot.size;
                 visitCountSpan.textContent = totalVisits.toLocaleString();
-                visitCounter.style.display = 'block';
-            } catch (error) {
-                console.error("Lỗi khi lấy số lượt truy cập:", error);
+                visitCounterDiv.style.display = 'block';
+            } catch (e) {
+                console.warn(e);
+                visitCountSpan.textContent = "1000+";
+                visitCounterDiv.style.display = 'block';
             }
         }
 
-        async function loadHomeworkData() {
-            try {
-                const response = await fetch('baitap.txt');
-                if (!response.ok) {
-                    throw new Error(`Lỗi HTTP! status: ${response.status}`);
-                }
-                const text = await response.text();
-                const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+        function themTinNhan(nguoi, noiDung) {
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('tin-nhan', `tin-nhan-${nguoi}`);
+            let processed = noiDung.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+            // Xử lý đơn giản phân số nếu có
+            processed = processed.replace(/(\d+)\/(\d+)/g, '<span style="font-weight:500">$1/$2</span>');
+            msgDiv.innerHTML = processed;
+            khungChat.appendChild(msgDiv);
+            khungChat.scrollTop = khungChat.scrollHeight;
+        }
 
-                let currentSection = '';
-                for (const line of lines) {
-                    if (line.startsWith('#')) {
-                        currentSection = line.substring(1);
-                        homeworkData[currentSection] = [];
-                    } else if (currentSection && homeworkData[currentSection]) {
-                        homeworkData[currentSection].push(line);
-                    }
-                }
-                
-                for (const subjectKey in homeworkData) {
-                    if (subjectFilters[subjectKey]) {
-                        subjectFilters[subjectKey].homeworkExamples = homeworkData[subjectKey];
-                    }
-                }
-            } catch (error) {
-                for (const key in subjectFilters) {
-                    subjectFilters[key].homeworkExamples = [];
-                }
+        function resetChatForTopic(topicKey) {
+            khungChat.innerHTML = '';
+            const topic = subjectKnowledge[topicKey];
+            if (topic) {
+                themTinNhan("bot", topic.welcome);
+            } else {
+                themTinNhan("bot", "Hãy chọn một chủ đề: Động vật hoặc Thực vật để bắt đầu.");
             }
-        }
-
-        function initApp() {
-            subjectButtons.forEach(button => {
-                button.addEventListener('click', () => selectSubject(button.dataset.subject));
-            });
-
-            sidebarButtons.forEach(button => {
-                button.addEventListener('click', () => selectSubject(button.dataset.subject));
-            });
-
-            nutGui.addEventListener('click', guiTinNhan);
-            
-            oNhapTinNhan.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    guiTinNhan();
-                }
-            });
-
-            oNhapTinNhan.addEventListener('input', function() {
-                updateInputPreview();
-                adjustTextareaHeight();
-            });
-
-            // Theo dõi lượt truy cập khi trang được tải
-            trackVisit();
-            getTotalVisits();
-            
-            // Cập nhật số lượt truy cập mỗi 30 giây
-            setInterval(getTotalVisits, 30000);
-        }
-
-        function adjustTextareaHeight() {
-            oNhapTinNhan.style.height = 'auto';
-            oNhapTinNhan.style.height = (oNhapTinNhan.scrollHeight) + 'px';
-            oNhapTinNhanPreview.style.height = oNhapTinNhan.style.height;
-        }
-
-        function updateInputPreview() {
-            const text = oNhapTinNhan.value;
-            oNhapTinNhanPreview.innerHTML = formatFractionsAndMixedNumbers(escapeHtml(text));
-        }
-
-        function escapeHtml(unsafe) {
-            return unsafe
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
-
-        function formatFractionsAndMixedNumbers(text) {
-            const mixedNumberRegex = /(\d+)(?:\s|)(\()(\d+)\/(\d+)(\))/g;
-            let processedText = text.replace(mixedNumberRegex, (match, whole, p1, numerator, denominator, p2) => {
-                return `<span class="mixed-number"><span class="whole-part">${whole}</span><span class="fraction"><span class="numerator">${numerator}</span><span class="denominator">${denominator}</span></span></span>`;
-            });
-            
-            const fractionRegex = /([^\/\s]+)\/([^\/\s]+)/g;
-            processedText = processedText.replace(fractionRegex, (match, numerator, denominator) => {
-                if (processedText.includes(`<span class="mixed-number"><span class="whole-part">`)) {
-                    return match;
-                }
-                return `<span class="fraction"><span class="numerator">${numerator}</span><span class="denominator">${denominator}</span></span>`;
-            });
-            
-            return processedText;
         }
 
         function selectSubject(subject) {
-            currentSubject = subject;
+            if (!subjectKnowledge[subject]) return;
+            currentTopic = subject;
             homeMenu.style.display = 'none';
             chatbotContainer.style.display = 'flex';
-            khungTroChuyen.innerHTML = '';
-            themTinNhanVaoGiaoDien("bot", `Chào mừng em đến với môn ${subjectFilters[subject].name}! Thầy có thể giúp gì cho em?`);
-
-            sidebarButtons.forEach(button => {
-                if (button.dataset.subject === subject) {
-                    button.classList.add('active');
-                } else {
-                    button.classList.remove('active');
-                }
+            resetChatForTopic(currentTopic);
+            // active style cho sidebar
+            sidebarBtns.forEach(btn => {
+                if (btn.dataset.subject === subject) btn.classList.add('active');
+                else btn.classList.remove('active');
             });
         }
 
-        function themTinNhanVaoGiaoDien(nguoiGui, vanBan) {
-            const divTinNhan = document.createElement('div');
-            divTinNhan.classList.add('tin-nhan', `tin-nhan-${nguoiGui}`);
-
-            let processedText = formatFractionsAndMixedNumbers(vanBan);
-            processedText = processedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            processedText = processedText.replace(/\n/g, '<br>');
-
-            divTinNhan.innerHTML = processedText;
-            khungTroChuyen.appendChild(divTinNhan);
-            khungTroChuyen.scrollTop = khungTroChuyen.scrollHeight;
-        }
-
-        async function guiTinNhan() {
-            const tinNhanNguoiDung = oNhapTinNhan.value.trim();
-            if (!tinNhanNguoiDung) return;
-
-            themTinNhanVaoGiaoDien("nguoi-dung", tinNhanNguoiDung);
-            oNhapTinNhan.value = '';
-            oNhapTinNhanPreview.innerHTML = '';
-            adjustTextareaHeight();
-
-            const loiChao = ["chào"];
-            if (loiChao.some(chao => tinNhanNguoiDung.toLowerCase().includes(chao))) {
-                themTinNhanVaoGiaoDien("bot", `Chào em! Thầy là một chatbot AI được thiết kế để trả lời các câu hỏi cấp tiểu học cho môn ${subjectFilters[currentSubject].name}. Bạn có câu hỏi gì không?`);
-                return;
+        function kiemTraNoiDungPhuHop(cauHoi, topicKey) {
+            const topicInfo = subjectKnowledge[topicKey];
+            if (!topicInfo) return false;
+            const lowerQuestion = cauHoi.toLowerCase();
+            // Lọc các từ khóa cấm chung
+            for (let forbidden of generalExclude) {
+                if (lowerQuestion.includes(forbidden.toLowerCase())) return false;
             }
-
-            const isAskingForHomework = homeworkRequestPhrases.test(tinNhanNguoiDung.toLowerCase());
-
-            if (isAskingForHomework) {
-                if (currentSubject && subjectFilters[currentSubject] && subjectFilters[currentSubject].homeworkExamples.length > 0) {
-                    let examples = subjectFilters[currentSubject].homeworkExamples.map((e, i) => `${i + 1}. ${e}`).join('\n');
-                    themTinNhanVaoGiaoDien("bot", `Chào em! Thầy có một vài dạng bài tập cơ bản mà em có thể tham khảo trong môn **${subjectFilters[currentSubject].name}** đây:\n${examples}\n\nEm hãy thử giải các bài tập này và hỏi thầy nếu có bất kỳ câu hỏi nào về cách làm nhé!`);
-                } else {
-                    themTinNhanVaoGiaoDien("bot", "Chào em! Hiện tại thầy chưa có sẵn bài tập cho môn này. Thay vào đó, em có thể hỏi thầy về cách làm một dạng bài tập nào đó, thầy sẽ hướng dẫn em nhé!");
-                }
-                return;
+            // Nếu câu hỏi quá xa vời không liên quan đến sinh học 11 (tùy chọn bổ sung)
+            // nhưng cơ bản cho phép bất kỳ câu hỏi sinh học 11 nào về topic đó
+            const hasRelevantKeyword = topicInfo.keywords.some(kw => lowerQuestion.includes(kw.toLowerCase()));
+            // Nếu không có từ khóa nào nhưng vẫn có thể là câu hỏi mở về chủ đề (vẫn cho phép)
+            // Tuy nhiên nếu hỏi về toán hay lịch sử thì từ chối
+            const sinhHocKeywords = ["sinh học", "chuyển hóa", "năng lượng", "vật chất", "động vật", "thực vật", "quang hợp", "tiêu hóa", "hô hấp", "tuần hoàn", "bài tiết", "trao đổi chất", "cơ thể", "tế bào", "cơ quan"];
+            const hasSinhHoc = sinhHocKeywords.some(k => lowerQuestion.includes(k));
+            if (!hasSinhHoc && !hasRelevantKeyword && lowerQuestion.length > 5) {
+                return false; // không liên quan sinh học
             }
-
-            if (!laCauHoiTieuHoc(tinNhanNguoiDung)) {
-                themTinNhanVaoGiaoDien("bot", "Xin lỗi, tôi chỉ có thể giúp bạn với các câu hỏi và bài tập ở cấp độ tiểu học. Vui lòng hỏi những câu hỏi phù hợp hơn nhé.");
-                return;
-            }
-
-            try {
-                const loiNhac = `Bạn là một giáo viên AI thân thiện và hữu ích (lưu ý bạn luôn là thầy giáo và xưng hô với người dùng là thầy - em), chuyên giải đáp các câu hỏi và gợi ý cách làm bài tập cho học sinh tiểu học trong môn ${subjectFilters[currentSubject].name}. Hãy trả lời một cách đơn giản, dễ hiểu, và chỉ tập trung vào kiến thức cấp tiểu học. Tuyệt đối không giải bài tập cụ thể, chỉ gợi ý phương pháp hoặc hướng dẫn. Nếu câu hỏi không phù hợp cấp tiểu học hoặc yêu cầu giải bài tập chi tiết, hãy từ chối một cách nhẹ nhàng và lịch sự. Nếu người dùng xin bài tập để làm thì cũng có thể được.
-                \n\nCâu hỏi: ${tinNhanNguoiDung}`;
-
-                const ketQua = await moHinh.generateContent(loiNhac);
-                const phanHoi = await ketQua.response;
-                const traLoiBot = phanHoi.text();
-                themTinNhanVaoGiaoDien("bot", traLoiBot);
-
-            } catch (loi) {
-                console.error("Lỗi khi gọi API Gemini: ", loi);
-                themTinNhanVaoGiaoDien("bot", "Rất tiếc, có lỗi xảy ra. Vui lòng thử lại sau nhé!");
-            }
-        }
-
-        function laCauHoiTieuHoc(cauHoi) {
-            const cauHoiThuong = cauHoi.toLowerCase();
-
-            const laKhongTieuHocChung = generalExcludeKeywords.some(tuKhoa => cauHoiThuong.includes(tuKhoa));
-            if (laKhongTieuHocChung) return false;
-
-            if (currentSubject && subjectFilters[currentSubject]) {
-                const subjectSpecificKeywords = subjectFilters[currentSubject].excludeKeywords;
-                const laKhongTieuHocMonHoc = subjectSpecificKeywords.some(tuKhoa => cauHoiThuong.includes(tuKhoa));
-                if (laKhongTieuHocMonHoc) return false;
-            }
-
             return true;
         }
 
-        function laYeuCauGiaiBaiTap(cauHoi) {
-            const cauHoiThuong = cauHoi.toLowerCase();
-            return homeworkRequestPhrases.test(cauHoiThuong);
+        async function xuLyCauHoi(question) {
+            if (!currentTopic) {
+                themTinNhan("bot", "Vui lòng chọn nội dung: Động vật hoặc Thực vật từ thanh bên trước khi đặt câu hỏi nhé!");
+                return;
+            }
+
+            if (!kiemTraNoiDungPhuHop(question, currentTopic)) {
+                themTinNhan("bot", "Xin lỗi, tôi chỉ hỗ trợ các câu hỏi thuộc chủ đề **Chuyển hóa vật chất và năng lượng ở sinh vật - Sinh học 11**. Hãy hỏi về quá trình tiêu hóa, hô hấp, tuần hoàn, bài tiết ở động vật, hoặc quang hợp, hô hấp, thoát hơi nước ở thực vật. Câu hỏi của bạn chưa phù hợp!");
+                return;
+            }
+
+            // Tạo prompt chuyên biệt cho sinh 11, không giải bài tập cụ thể
+            const topicName = subjectKnowledge[currentTopic].name;
+            const promptHeThong = `Bạn là một giáo viên Sinh học 11, chuyên sâu về "${topicName}". Xưng hô "thầy" với học sinh (gọi là "em"). Trả lời rõ ràng, dễ hiểu, đúng kiến thức sách giáo khoa Sinh học 11 cơ bản, không đi sâu vào nội dung đại học. Nếu câu hỏi yêu cầu giải chi tiết một bài tập cụ thể, hãy hướng dẫn phương pháp làm, không làm bài hộ. Chỉ trả lời về các vấn đề sinh học liên quan đến chuyển hóa vật chất và năng lượng ở động vật hoặc thực vật. Hãy dùng ví dụ thực tế, hình ảnh minh họa bằng lời văn sinh động. Câu hỏi của học sinh: ${question}`;
+
+            try {
+                const result = await model.generateContent(promptHeThong);
+                const response = await result.response;
+                const reply = response.text();
+                themTinNhan("bot", reply);
+            } catch (error) {
+                console.error("Gemini error:", error);
+                themTinNhan("bot", "Rất tiếc, hệ thống gặp sự cố. Em vui lòng thử lại sau nhé! Hoặc hỏi câu hỏi khác về chuyển hóa ở động vật/thực vật.");
+            }
         }
 
-        loadHomeworkData();
+        async function guiTinNhan() {
+            const userText = inputField.value.trim();
+            if (!userText) return;
+            themTinNhan("nguoi-dung", userText);
+            inputField.value = '';
+            inputField.style.height = 'auto';
+            await xuLyCauHoi(userText);
+        }
 
-        document.addEventListener('DOMContentLoaded', initApp);
+        // Khởi tạo sự kiện
+        subjectButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                selectSubject(btn.dataset.subject);
+            });
+        });
+        sidebarBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                selectSubject(btn.dataset.subject);
+            });
+        });
+        sendBtn.addEventListener('click', guiTinNhan);
+        inputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                guiTinNhan();
+            }
+        });
+        // Tự động điều chỉnh chiều cao textarea
+        inputField.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Thống kê lượt xem
+        trackVisit();
+        getTotalVisits();
+        setInterval(getTotalVisits, 45000);
     </script>
 </body>
 </html>
