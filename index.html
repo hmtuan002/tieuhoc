@@ -2,11 +2,9 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>CHATBOT: Chuyển hóa vật chất và năng lượng ở sinh vật - Sinh học 11</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
 
@@ -28,6 +26,7 @@
             background: #eaf7e6;
         }
 
+        /* Lớp nền mờ xanh */
         body::before {
             content: '';
             position: fixed;
@@ -36,12 +35,9 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
-            background-size: cover;
-            background-position: center;
             z-index: -2;
         }
 
-        /* Lớp phủ mờ nhẹ để tăng độ đọc */
         body::after {
             content: '';
             position: fixed;
@@ -49,16 +45,46 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.75);
+            background-color: rgba(255, 255, 255, 0.78);
             z-index: -1;
         }
 
+        /* Logo cố định góc trên trái */
+        .top-logo {
+            position: fixed;
+            top: 18px;
+            left: 20px;
+            z-index: 1100;
+            width: 65px;
+            height: 65px;
+            background: #ffffffcc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            backdrop-filter: blur(4px);
+            border: 2px solid #ffd966;
+            transition: transform 0.2s ease;
+        }
+        .top-logo:hover {
+            transform: scale(1.02);
+        }
+        .top-logo img {
+            width: 52px;
+            height: 52px;
+            object-fit: cover;
+            border-radius: 50%;
+            background: #2e7d32;
+        }
+
+        /* Nội dung chính */
         #home-menu {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 30px 20px;
+            padding: 40px 20px 30px;
             text-align: center;
             margin: 30px auto;
             flex-grow: 1;
@@ -66,148 +92,94 @@
             width: 90%;
         }
 
-        .logo-area {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .logo-img {
-            width: 100px;
-            height: 100px;
-            background-color: #2e7d32;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            border: 3px solid #ffd54f;
-        }
-
-        .logo-img i {
-            font-size: 55px;
-            color: #ffeb3b;
-        }
-
         #home-menu h1 {
             color: #1b5e20;
-            margin-bottom: 25px;
-            font-size: 2.2em;
-            text-shadow: 2px 2px 6px rgba(0,0,0,0.1);
-            background-color: rgba(255, 248, 225, 0.95);
-            padding: 18px 35px;
-            border-radius: 60px;
-            box-shadow: 0 6px 18px rgba(46, 125, 50, 0.2);
+            margin: 20px 0 20px 0;
+            font-size: 2.3em;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.08);
+            background-color: rgba(255, 251, 235, 0.95);
+            padding: 20px 40px;
+            border-radius: 70px;
+            box-shadow: 0 8px 20px rgba(46,125,50,0.2);
             border-left: 8px solid #4caf50;
             border-right: 8px solid #4caf50;
             font-weight: 700;
+            backdrop-filter: blur(4px);
         }
 
         .subject-buttons {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 30px;
+            gap: 40px;
             width: 100%;
-            margin: 20px 0 30px;
+            margin: 35px 0 30px;
         }
 
         .subject-button {
             background: linear-gradient(145deg, #2e7d32, #1b5e20);
             color: white;
             border: none;
-            border-radius: 40px;
-            padding: 22px 30px;
-            font-size: 1.4em;
+            border-radius: 60px;
+            padding: 28px 36px;
+            font-size: 1.5em;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 12px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 18px 28px rgba(0,0,0,0.2);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-width: 280px;
-            backdrop-filter: blur(2px);
+            min-width: 300px;
             border: 1px solid #ffb74d;
         }
 
         .subject-button i {
-            font-size: 3em;
-            margin-bottom: 15px;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+            font-size: 3.4em;
+            margin-bottom: 18px;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
         }
 
         .subject-button:hover {
             transform: translateY(-8px);
             background: linear-gradient(145deg, #388e3c, #2e7d32);
-            box-shadow: 0 18px 28px rgba(0,0,0,0.25);
-        }
-
-        #contact-info {
-            margin-top: 35px;
-            padding: 20px 28px;
-            background-color: rgba(255, 255, 255, 0.96);
-            border-radius: 35px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 800px;
-            border-top: 6px solid #4caf50;
-            text-align: center;
-        }
-
-        #contact-info h3 {
-            color: #2c6e2c;
-            margin-bottom: 18px;
-            font-size: 1.7em;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            font-size: 1.05em;
-            margin-bottom: 10px;
-        }
-
-        .contact-item i {
-            color: #2e7d32;
-            font-size: 1.2em;
+            box-shadow: 0 22px 32px rgba(0,0,0,0.28);
         }
 
         footer {
             background-color: #1b5e20;
-            color: #f1f8e9;
-            padding: 20px 0;
+            color: #f9f7e8;
+            padding: 18px 0;
             text-align: center;
             margin-top: auto;
             border-top: 4px solid #ffc107;
         }
-
         .footer-content p {
             margin: 5px 0;
-            font-size: 0.95em;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
         }
 
+        /* Khung chat chính */
         #chatbot-container {
             display: none;
             flex-direction: row;
             overflow: hidden;
-            background-color: rgba(255, 255, 255, 0.96);
-            box-shadow: 0 12px 28px rgba(0,0,0,0.15);
-            border-radius: 28px;
-            margin: 25px;
+            background-color: rgba(255, 255, 245, 0.96);
+            box-shadow: 0 16px 32px rgba(0,0,0,0.12);
+            border-radius: 32px;
+            margin: 30px 25px 25px 25px;
             backdrop-filter: blur(4px);
             flex-grow: 1;
-            min-height: 550px;
-            border: 1px solid #c5e1a5;
+            min-height: 580px;
+            border: 1px solid #b9f6ca;
         }
 
         #sidebar {
-            width: 260px;
+            width: 270px;
             background-color: #f1f8e9;
-            padding: 20px 12px;
+            padding: 22px 14px;
             border-right: 3px solid #81c784;
             display: flex;
             flex-direction: column;
@@ -215,42 +187,43 @@
         }
 
         #sidebar h3 {
-            color: #2c5e2c;
-            font-size: 1.6em;
+            color: #2a5e2a;
+            font-size: 1.7em;
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 28px;
             border-bottom: 2px dashed #8bc34a;
             padding-bottom: 12px;
+            font-weight: 600;
         }
 
         .sidebar-button {
             background-color: #dcedc8;
             color: #1f4f1f;
             border: none;
-            border-radius: 50px;
-            padding: 14px 12px;
-            margin-bottom: 16px;
-            font-size: 1.1em;
+            border-radius: 60px;
+            padding: 14px 16px;
+            margin-bottom: 18px;
+            font-size: 1.12em;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: 0.2s;
             text-align: left;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
         .sidebar-button i {
-            font-size: 1.5em;
-            width: 32px;
+            font-size: 1.6em;
+            width: 38px;
             text-align: center;
         }
 
         .sidebar-button.active, .sidebar-button:hover {
             background-color: #81c784;
             color: white;
-            transform: translateX(5px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateX(6px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
         }
 
         .chat-area {
@@ -263,45 +236,45 @@
         #khung-tro-chuyen {
             flex-grow: 1;
             overflow-y: auto;
-            padding: 20px;
+            padding: 22px;
             background: #fef9e4;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
         }
 
         .tin-nhan {
-            padding: 12px 18px;
+            padding: 12px 20px;
             border-radius: 28px;
             max-width: 80%;
             word-wrap: break-word;
-            line-height: 1.45;
+            line-height: 1.5;
             font-size: 0.98rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
 
         .tin-nhan-nguoi-dung {
             background: #4caf50;
             color: white;
             margin-left: auto;
-            border-bottom-right-radius: 6px;
+            border-bottom-right-radius: 8px;
         }
 
         .tin-nhan-bot {
             background: #e8f5e9;
             color: #1b3b1b;
             margin-right: auto;
-            border-bottom-left-radius: 6px;
+            border-bottom-left-radius: 8px;
             border-left: 5px solid #2e7d32;
         }
 
         #khu-vuc-nhap {
             display: flex;
-            padding: 16px 20px;
-            background: #fff3e0;
+            padding: 18px 22px;
+            background: #fff7e8;
             border-top: 2px solid #c8e6c9;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
         }
 
         #o-nhap-tin-nhan-container {
@@ -312,9 +285,9 @@
         #o-nhap-tin-nhan {
             width: 100%;
             background: white;
-            padding: 14px 18px;
+            padding: 14px 22px;
             border: 2px solid #a5d6a7;
-            border-radius: 50px;
+            border-radius: 60px;
             outline: none;
             font-size: 15px;
             font-family: 'Quicksand', sans-serif;
@@ -325,7 +298,7 @@
 
         #o-nhap-tin-nhan:focus {
             border-color: #2e7d32;
-            box-shadow: 0 0 0 3px rgba(46,125,50,0.2);
+            box-shadow: 0 0 0 4px rgba(46,125,50,0.2);
         }
 
         #nut-gui {
@@ -333,39 +306,48 @@
             color: white;
             border: none;
             border-radius: 50%;
-            width: 52px;
-            height: 52px;
+            width: 54px;
+            height: 54px;
             cursor: pointer;
-            font-size: 24px;
+            font-size: 26px;
             transition: 0.2s;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         #nut-gui:hover {
             background: #1b5e20;
-            transform: scale(1.02);
-        }
-
-        #visit-counter {
-            position: fixed;
-            bottom: 25px;
-            right: 20px;
-            background: #2e7d32;
-            color: white;
-            padding: 8px 18px;
-            border-radius: 40px;
-            font-size: 14px;
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            z-index: 1000;
-            display: none;
-            backdrop-filter: blur(4px);
+            transform: scale(1.03);
         }
 
         @media (max-width: 768px) {
+            .top-logo {
+                width: 52px;
+                height: 52px;
+                top: 12px;
+                left: 12px;
+            }
+            .top-logo img {
+                width: 42px;
+                height: 42px;
+            }
+            #home-menu h1 {
+                font-size: 1.5em;
+                padding: 14px 20px;
+            }
+            .subject-button {
+                min-width: 240px;
+                font-size: 1.2em;
+                padding: 18px 20px;
+            }
+            .subject-button i {
+                font-size: 2.4em;
+            }
             #chatbot-container {
                 flex-direction: column;
-                margin: 12px;
+                margin: 15px;
             }
             #sidebar {
                 width: 100%;
@@ -373,7 +355,8 @@
                 overflow-x: auto;
                 gap: 12px;
                 border-right: none;
-                border-bottom: 2px solid #81c784;
+                border-bottom: 3px solid #81c784;
+                padding: 12px;
             }
             #sidebar h3 {
                 display: none;
@@ -382,32 +365,23 @@
                 flex-shrink: 0;
                 width: auto;
                 margin-bottom: 0;
-            }
-            .subject-button {
-                min-width: 220px;
-                font-size: 1.2em;
-                padding: 16px 20px;
-            }
-            #home-menu h1 {
-                font-size: 1.5em;
+                padding: 10px 18px;
             }
             .tin-nhan {
-                max-width: 90%;
+                max-width: 92%;
             }
         }
     </style>
 </head>
 <body>
-    <div id="visit-counter">
-        <i class="fas fa-leaf"></i> <span id="visit-count">0</span> lượt tham quan
+
+    <!-- Logo góc trên trái với link ảnh abc -->
+    <div class="top-logo">
+        <img src="abc" alt="Logo Chatbot Sinh học 11">
     </div>
 
+    <!-- Giao diện chọn chủ đề ban đầu -->
     <div id="home-menu">
-        <div class="logo-area">
-            <div class="logo-img">
-                <i class="fas fa-seedling"></i>
-            </div>
-        </div>
         <h1><i class="fas fa-exchange-alt"></i> CHUYỂN HÓA VẬT CHẤT VÀ NĂNG LƯỢNG Ở SINH VẬT <br> Sinh học 11</h1>
         <div class="subject-buttons">
             <button class="subject-button" data-subject="dong-vat">
@@ -419,21 +393,9 @@
                 CHUYỂN HÓA Ở THỰC VẬT
             </button>
         </div>
-        
-        <div id="contact-info">
-            <h3><i class="fas fa-chalkboard-user"></i> Thông tin hỗ trợ học tập</h3>
-            <div class="contact-item">
-                <i class="fas fa-user-tie"></i>
-                <span><strong>Giáo viên bộ môn Sinh học:</strong> Cô Nguyễn Thị Xanh</span>
-            </div>
-            <div class="contact-item">
-                <i class="fas fa-phone-alt"></i> <span>Hotline hỗ trợ: 0865 123 456</span>
-                <i class="fas fa-envelope"></i> <span>Email: sinhhoc11@edu.vn</span>
-            </div>
-            <p style="margin-top: 12px; font-size: 0.85rem;"><i class="fas fa-info-circle"></i> Chatbot chuyên sâu về chuyển hóa vật chất & năng lượng ở động vật và thực vật (Sinh 11)</p>
-        </div>
     </div>
 
+    <!-- Giao diện chat chính (ẩn ban đầu) -->
     <div id="chatbot-container">
         <div id="sidebar">
             <h3><i class="fas fa-dna"></i> Nội dung chính</h3>
@@ -466,7 +428,7 @@
     <footer>
         <div class="footer-content">
             <p><i class="fas fa-chalkboard"></i> Kiến thức Sinh học 11 - Chuyển hóa vật chất và năng lượng</p>
-            <p><i class="fas fa-image"></i> Logo: abc (hình ảnh biểu tượng)</p>
+            <p><i class="fas fa-leaf"></i> Học tập cùng trợ lý AI chuyên sâu</p>
         </div>
     </footer>
 
@@ -480,18 +442,7 @@
     <script type="module">
         import { GoogleGenerativeAI } from "@google/generative-ai";
 
-        // Cấu hình Firebase (giữ nguyên từ yêu cầu)
-        const firebaseConfig = {
-            apiKey: "AIzaSyCyhGASygL5BVBB-0pJJNwoyTZ61pAzP7c",
-            authDomain: "tieuhoc-a7f57.firebaseapp.com",
-            projectId: "tieuhoc-a7f57",
-            storageBucket: "tieuhoc-a7f57.appspot.com",
-            messagingSenderId: "736631398515",
-            appId: "1:736631398515:web:a41bbabeeb98c3df42ca06"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
+        // Cấu hình Gemini
         const API_KEY = "AIzaSyD5xoXaqEGnRELeY74rQdnYLYiw-C-zMqE";
         const genAI = new GoogleGenerativeAI(API_KEY);
         const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
@@ -504,114 +455,90 @@
         const sendBtn = document.getElementById('nut-gui');
         const subjectButtons = document.querySelectorAll('.subject-button');
         const sidebarBtns = document.querySelectorAll('.sidebar-button');
-        const visitCounterDiv = document.getElementById('visit-counter');
-        const visitCountSpan = document.getElementById('visit-count');
 
-        let currentTopic = ''; // 'dong-vat' or 'thuc-vat'
-        let totalVisits = 0;
+        let currentTopic = ''; // 'dong-vat' hoặc 'thuc-vat'
 
-        // Định nghĩa nội dung chuyên sâu cho 2 mảng kiến thức
+        // Kiến thức chuyên sâu cho từng chủ đề
         const subjectKnowledge = {
             "dong-vat": {
                 name: "Chuyển hóa vật chất và năng lượng ở Động vật",
                 welcome: "Chào em! Đây là chủ đề về CHUYỂN HÓA VẬT CHẤT VÀ NĂNG LƯỢNG Ở ĐỘNG VẬT (Sinh 11). Em có thể hỏi về: tiêu hóa, hô hấp, tuần hoàn, bài tiết, trao đổi chất, hoặc các quá trình chuyển hóa năng lượng trong tế bào động vật. Thầy sẽ hướng dẫn chi tiết!",
-                keywords: ["tiêu hóa", "hô hấp", "tuần hoàn", "máu", "bài tiết", "động vật", "chuyển hóa năng lượng", "cơ", "gan", "thận", "phổi", "hệ tiêu hóa", "hệ tuần hoàn", "hệ hô hấp", "hệ bài tiết", "trao đổi chất", "hô hấp tế bào", "ATP", "enzyme tiêu hóa", "dạ dày", "ruột non", "nhai lại"]
+                keywords: ["tiêu hóa", "hô hấp", "tuần hoàn", "máu", "bài tiết", "động vật", "chuyển hóa năng lượng", "cơ", "gan", "thận", "phổi", "hệ tiêu hóa", "hệ tuần hoàn", "hệ hô hấp", "hệ bài tiết", "trao đổi chất", "hô hấp tế bào", "ATP", "enzyme tiêu hóa", "dạ dày", "ruột non", "nhai lại", "chuyển hóa vật chất"]
             },
             "thuc-vat": {
                 name: "Chuyển hóa vật chất và năng lượng ở Thực vật",
                 welcome: "Chào em! Đây là chủ đề CHUYỂN HÓA VẬT CHẤT VÀ NĂNG LƯỢNG Ở THỰC VẬT (Sinh 11). Em hãy hỏi về: quang hợp, hô hấp thực vật, thoát hơi nước, vận chuyển nước và muối khoáng, dinh dưỡng nitơ, hoặc các con đường cố định CO2 ở thực vật C3, C4, CAM nhé!",
-                keywords: ["quang hợp", "hô hấp thực vật", "thoát hơi nước", "vận chuyển nước", "muối khoáng", "dinh dưỡng nitơ", "cố định CO2", "thực vật C3", "C4", "CAM", "lục lạp", "diệp lục", "ATP", "NADPH", "chu trình Calvin", "ánh sáng", "khí khổng", "rễ", "thân", "lá"]
+                keywords: ["quang hợp", "hô hấp thực vật", "thoát hơi nước", "vận chuyển nước", "muối khoáng", "dinh dưỡng nitơ", "cố định CO2", "thực vật C3", "C4", "CAM", "lục lạp", "diệp lục", "ATP", "NADPH", "chu trình Calvin", "ánh sáng", "khí khổng", "rễ", "thân", "lá", "chuyển hóa năng lượng thực vật"]
             }
         };
 
-        // Cấm giải bài tập và lọc kiến thức đại học (chỉ sinh học 11)
+        // Từ khóa cấm (kiến thức quá cao hoặc không phải sinh học 11)
         const generalExclude = [
             "sinh học phân tử nâng cao", "kỹ thuật di truyền", "genomics", "proteomics", "thạc sĩ", "tiến sĩ",
-            "chuyên đề sinh học đại học", "công nghệ sinh học chuyên sâu", "thực hành phòng thí nghiệm nâng cao"
+            "chuyên đề sinh học đại học", "công nghệ sinh học chuyên sâu", "thực hành phòng thí nghiệm nâng cao",
+            "giải phẫu bệnh", "dược lý", "hóa sinh nâng cao"
         ];
 
-        // Hàm ghi nhận lượt truy cập
-        async function trackVisit() {
-            try {
-                await db.collection('visits').add({
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    userAgent: navigator.userAgent,
-                    screenResolution: `${window.screen.width}x${window.screen.height}`,
-                    language: navigator.language
-                });
-            } catch (error) {
-                console.warn("Firebase visit lỗi:", error);
-            }
-        }
-
-        async function getTotalVisits() {
-            try {
-                const snapshot = await db.collection('visits').get();
-                totalVisits = snapshot.size;
-                visitCountSpan.textContent = totalVisits.toLocaleString();
-                visitCounterDiv.style.display = 'block';
-            } catch (e) {
-                console.warn(e);
-                visitCountSpan.textContent = "1000+";
-                visitCounterDiv.style.display = 'block';
-            }
-        }
-
+        // Thêm tin nhắn vào khung chat
         function themTinNhan(nguoi, noiDung) {
             const msgDiv = document.createElement('div');
             msgDiv.classList.add('tin-nhan', `tin-nhan-${nguoi}`);
             let processed = noiDung.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-            // Xử lý đơn giản phân số nếu có
+            // Xử lý phân số đơn giản
             processed = processed.replace(/(\d+)\/(\d+)/g, '<span style="font-weight:500">$1/$2</span>');
             msgDiv.innerHTML = processed;
             khungChat.appendChild(msgDiv);
             khungChat.scrollTop = khungChat.scrollHeight;
         }
 
+        // Reset khung chat khi chọn chủ đề
         function resetChatForTopic(topicKey) {
             khungChat.innerHTML = '';
             const topic = subjectKnowledge[topicKey];
             if (topic) {
                 themTinNhan("bot", topic.welcome);
             } else {
-                themTinNhan("bot", "Hãy chọn một chủ đề: Động vật hoặc Thực vật để bắt đầu.");
+                themTinNhan("bot", "Vui lòng chọn nội dung: Động vật hoặc Thực vật.");
             }
         }
 
+        // Chuyển giao diện và chủ đề
         function selectSubject(subject) {
             if (!subjectKnowledge[subject]) return;
             currentTopic = subject;
             homeMenu.style.display = 'none';
             chatbotContainer.style.display = 'flex';
             resetChatForTopic(currentTopic);
-            // active style cho sidebar
+            // Cập nhật trạng thái active cho sidebar
             sidebarBtns.forEach(btn => {
-                if (btn.dataset.subject === subject) btn.classList.add('active');
-                else btn.classList.remove('active');
+                if (btn.dataset.subject === subject) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
             });
         }
 
+        // Kiểm tra nội dung có phù hợp với sinh học 11 không
         function kiemTraNoiDungPhuHop(cauHoi, topicKey) {
             const topicInfo = subjectKnowledge[topicKey];
             if (!topicInfo) return false;
             const lowerQuestion = cauHoi.toLowerCase();
-            // Lọc các từ khóa cấm chung
+            // Lọc từ khóa cấm chung
             for (let forbidden of generalExclude) {
                 if (lowerQuestion.includes(forbidden.toLowerCase())) return false;
             }
-            // Nếu câu hỏi quá xa vời không liên quan đến sinh học 11 (tùy chọn bổ sung)
-            // nhưng cơ bản cho phép bất kỳ câu hỏi sinh học 11 nào về topic đó
+            // Từ khóa sinh học cơ bản để đảm bảo không hỏi môn khác
+            const sinhHocKeywords = ["sinh học", "chuyển hóa", "năng lượng", "vật chất", "động vật", "thực vật", "quang hợp", "tiêu hóa", "hô hấp", "tuần hoàn", "bài tiết", "trao đổi chất", "cơ thể", "tế bào", "cơ quan", "enzyme", "hệ tuần hoàn", "hệ tiêu hóa"];
             const hasRelevantKeyword = topicInfo.keywords.some(kw => lowerQuestion.includes(kw.toLowerCase()));
-            // Nếu không có từ khóa nào nhưng vẫn có thể là câu hỏi mở về chủ đề (vẫn cho phép)
-            // Tuy nhiên nếu hỏi về toán hay lịch sử thì từ chối
-            const sinhHocKeywords = ["sinh học", "chuyển hóa", "năng lượng", "vật chất", "động vật", "thực vật", "quang hợp", "tiêu hóa", "hô hấp", "tuần hoàn", "bài tiết", "trao đổi chất", "cơ thể", "tế bào", "cơ quan"];
             const hasSinhHoc = sinhHocKeywords.some(k => lowerQuestion.includes(k));
-            if (!hasSinhHoc && !hasRelevantKeyword && lowerQuestion.length > 5) {
-                return false; // không liên quan sinh học
+            if (!hasSinhHoc && !hasRelevantKeyword && lowerQuestion.length > 6) {
+                return false;
             }
             return true;
         }
 
+        // Xử lý câu hỏi gửi đến AI
         async function xuLyCauHoi(question) {
             if (!currentTopic) {
                 themTinNhan("bot", "Vui lòng chọn nội dung: Động vật hoặc Thực vật từ thanh bên trước khi đặt câu hỏi nhé!");
@@ -623,9 +550,8 @@
                 return;
             }
 
-            // Tạo prompt chuyên biệt cho sinh 11, không giải bài tập cụ thể
             const topicName = subjectKnowledge[currentTopic].name;
-            const promptHeThong = `Bạn là một giáo viên Sinh học 11, chuyên sâu về "${topicName}". Xưng hô "thầy" với học sinh (gọi là "em"). Trả lời rõ ràng, dễ hiểu, đúng kiến thức sách giáo khoa Sinh học 11 cơ bản, không đi sâu vào nội dung đại học. Nếu câu hỏi yêu cầu giải chi tiết một bài tập cụ thể, hãy hướng dẫn phương pháp làm, không làm bài hộ. Chỉ trả lời về các vấn đề sinh học liên quan đến chuyển hóa vật chất và năng lượng ở động vật hoặc thực vật. Hãy dùng ví dụ thực tế, hình ảnh minh họa bằng lời văn sinh động. Câu hỏi của học sinh: ${question}`;
+            const promptHeThong = `Bạn là một giáo viên Sinh học 11 rất thân thiện, chuyên sâu về "${topicName}". Xưng hô "thầy" với học sinh (gọi là "em"). Trả lời rõ ràng, dễ hiểu, bám sát sách giáo khoa Sinh học 11 cơ bản. Nếu câu hỏi yêu cầu giải chi tiết một bài tập cụ thể, hãy hướng dẫn phương pháp làm, không làm bài hộ. Chỉ trả lời về các vấn đề sinh học liên quan đến chuyển hóa vật chất và năng lượng ở động vật hoặc thực vật. Dùng ví dụ thực tế, ngôn ngữ trong sáng. Câu hỏi của học sinh: ${question}`;
 
             try {
                 const result = await model.generateContent(promptHeThong);
@@ -638,6 +564,7 @@
             }
         }
 
+        // Gửi tin nhắn từ người dùng
         async function guiTinNhan() {
             const userText = inputField.value.trim();
             if (!userText) return;
@@ -665,16 +592,10 @@
                 guiTinNhan();
             }
         });
-        // Tự động điều chỉnh chiều cao textarea
         inputField.addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = (this.scrollHeight) + 'px';
         });
-
-        // Thống kê lượt xem
-        trackVisit();
-        getTotalVisits();
-        setInterval(getTotalVisits, 45000);
     </script>
 </body>
 </html>
